@@ -1,0 +1,130 @@
+/* Reset básico */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+}
+
+:host {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+}
+
+/* Zona esquerda */
+.registro-left {
+  flex: 1;
+  background: #DAE8FC;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  color: #333;
+  text-align: center;
+}
+
+.registro-left img {
+  max-width: 150px;
+  margin-bottom: 20px;
+}
+
+.registro-left h1 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.registro-left p {
+  font-size: 1.1rem;
+}
+
+/* Zona dereita */
+.registro-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  background: #f9f9f9;
+}
+
+.registro-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 400px;
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+.registro-form label {
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #555;
+}
+
+.registro-form input {
+  padding: 12px 15px;
+  margin-bottom: 25px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border 0.3s;
+}
+
+.registro-form input:focus {
+  border-color: #4285F4;
+  outline: none;
+}
+
+.registro-form button {
+  padding: 14px;
+  margin-bottom: 15px;
+  background-color: #4285F4;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.registro-form button:hover {
+  background-color: #357ae8;
+}
+
+.registro-form .secondary-btn {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.registro-form .secondary-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.error {
+  color: #d32f2f;
+  font-size: 0.85rem;
+  margin-top: -20px;
+  margin-bottom: 15px;
+}
+
+@media (max-width: 768px) {
+  :host {
+    flex-direction: column;
+  }
+
+  .registro-left, .registro-right {
+    flex: unset;
+    width: 100%;
+    padding: 20px;
+  }
+
+  .registro-right {
+    justify-content: flex-start;
+  }
+}
