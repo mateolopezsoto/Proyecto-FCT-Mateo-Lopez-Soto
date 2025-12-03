@@ -15,6 +15,8 @@ Route::prefix('api')
         // Rutas públicas
         Route::post('/login', [UsuarioController::class, 'login']);
         Route::post('/register', [UsuarioController::class, 'register']);
+        Route::post('/forgot-password', [UsuarioController::class, 'forgotPassword']);
+        Route::post('/reset-password', [UsuarioController::class, 'reset']);
 
 
         // Rutas protegidas con Sanctum
@@ -26,5 +28,6 @@ Route::prefix('api')
             Route::get('/tipos-instalacion', [TipoInstalacionController::class, 'index']);
             Route::get('/horarios', [HorarioController::class, 'index']);
             Route::get('/user', [UsuarioController::class, 'user']);
+            Route::put('/reservas/{id}/cancelar', [ReservaController::class, 'cancelarReserva']);
         });
 });

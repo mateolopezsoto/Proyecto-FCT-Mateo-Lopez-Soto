@@ -52,4 +52,13 @@ class Usuario extends Authenticatable
     {
         return $this->hasMany(Reserva::class, 'id_usuario', 'id_usuario');
     }
+
+    public function getEmailForPasswordReset()
+    {
+        return $this->correo;
+    }
+
+    public function routeNotificationForMail($notificacion) {
+        return $this->correo;
+    }
 }

@@ -8,6 +8,7 @@ use App\Models\Horario; // Necesario para buscar/crear horarios
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -107,5 +108,26 @@ class ReservaController extends Controller
                             ->get();
 
         return response()->json($reservas);
+    }
+
+    public function cancelarReserva(int $id)
+    {
+        $userId = Auth::id();
+
+        try {
+            $reserva = Reserva::where('id_reserva', $id)
+                                ->where('id_usuario', $userId)
+                                ->firstOrFail();
+            
+            if (Carbon::parse($reserva->data_reserva)->isPast()) {
+                return response()->json(['message' => 'Non se pode cancelar unha reserva xa pasada'], Response::HTTP_CONFLICT);
+            }
+
+            $reserva->update(['estado' => 'Cancelada']);
+
+            return response()->json(['message' => 'Reserva cancelada con éxito'], Response::HTTP_OK);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Reserva non atopada ou non autorizada'], Response::HTTP_NOT_FOUND);
+        }
     }
 }

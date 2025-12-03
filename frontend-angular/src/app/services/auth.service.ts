@@ -177,4 +177,14 @@ async comprobarSesion() {
     this.router.navigate(['/']);
     this.loading.set(false);
   }
+
+  async solicitarRestablecemento(correo: string): Promise<void> {
+    const payload = { correo: correo };
+    return lastValueFrom(this.http.post<void>(`${this.apiUrl}/forgot-password`, payload));
+  }
+
+    async restablecerContrasinal(datos: any): Promise<void> {
+    // Llamada al endpoint de reset de Laravel
+    return lastValueFrom(this.http.post<void>(`${this.apiUrl}/reset-password`, datos));
+  }
 }

@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { AuthService } from './services/auth.service';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { RestablecerContrasinalComponent } from './restablecer-contrasinal/restablecer-contrasinal.component';
 
 // Función auxiliar para verificar la autenticación (usa la misma lógica que el Guard de Reservas)
 const authGuard = async () => {
@@ -73,6 +74,16 @@ export const routes: Routes = [
     path: 'mis-reservas',
     loadComponent: () => import('./mis-reservas/mis-reservas.component').then(c => c.MisReservasComponent),
     canActivate: [authGuard]
+  },
+
+  {
+    path: 'olvido-contrasinal',
+    loadComponent: () => import('./solicitar-restablecimiento/solicitar-restablecimiento.component').then(c => c.SolicitarRestablecimientoComponent)
+  },
+
+  {
+    path: 'restablecer-contrasinal',
+    component: RestablecerContrasinalComponent
   },
 
 

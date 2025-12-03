@@ -4,10 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Usuario;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class UsuarioController extends Controller
 {
@@ -105,5 +109,67 @@ class UsuarioController extends Controller
     {
         $request->user()->currentAccessToken()->delete();
         return response()->json(['message' => 'Sesión pechada']);
+    }
+
+    public function forgotPassword(Request $request)
+    {
+        $request->validate(['correo' => 'required|email']);
+
+        $status = Password::sendResetLink(
+            $request->only('correo')
+        );
+
+        if ($status === Password::RESET_LINK_SENT) {
+            return response()->json(['message' => 'Ligazón de restablecemento enviada'], 200);
+        }
+
+        return response()->json(['message' => 'Non se puido enviar a ligazón de restablecemento'], 400);
+    }
+
+    public function reset(Request $request)
+    {
+$request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|confirmed|min:8',
+        ]);
+
+        // 1. Buscar al usuario explícitamente por 'correo'
+        $user = Usuario::where('correo', $request->email)->first();
+
+        if (!$user) {
+            return response()->json(['message' => 'Usuario non atopado (Email incorrecto).'], 404);
+        }
+
+        // 2. Verificar el token usando el repositorio (Requiere que la tabla password_reset_tokens exista)
+        $tokenRecord = DB::table('password_reset_tokens')
+            ->where('email', $request->email)
+            ->first();
+
+        if (!$tokenRecord) {
+            return response()->json(['message' => 'Non existe unha solicitude de restablecemento para este correo.'], 400);
+        }
+
+        // 3. Verificaciones de seguridad: Expiración y hash del token (Asumiendo corrección UTC)
+        $tokenCreatedAt = \Carbon\Carbon::parse($tokenRecord->created_at);
+        if ($tokenCreatedAt->addMinutes(60)->isPast()) {
+            return response()->json(['message' => 'O token expirou.'], 400);
+        }
+
+        if (! Hash::check($request->token, $tokenRecord->token)) {
+            return response()->json(['message' => 'O token é inválido (Hash non coincide).'], 400);
+        }
+
+        // 5. CAMBIO DE CONTRASEÑA FINAL:
+        $user->forceFill([
+            'contrasinal' => Hash::make($request->password)
+        ])->save(); // <--- ELIMINAMOS setRememberToken() AQUÍ
+
+        // 6. Borrar el token usado
+        DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+
+        event(new PasswordReset($user));
+
+        return response()->json(['message' => 'O teu contrasinal foi restablecido con éxito.'], 200);
     }
 }
