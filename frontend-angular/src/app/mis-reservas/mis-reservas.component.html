@@ -1,0 +1,59 @@
+<div class="container-mis-reservas">
+    <header>
+        <h1>As miñas Reservas</h1>
+        <!-- Botón para volver al catálogo de reservas -->
+        <button routerLink="/reservas" class="btn-primary">← Volver ao Catálogo</button>
+    </header>
+
+    <!-- Indicador de carga -->
+    <div *ngIf="loading()" class="loading-indicator">Cargando historial...</div>
+    
+    <!-- Mensaje si no hay reservas -->
+    <div *ngIf="!loading() && misReservas().length === 0" class="no-reservas">
+        Aínda non tes ningunha reserva.
+    </div>
+
+    <!-- Tabla de Reservas -->
+    <table *ngIf="misReservas().length > 0 && !loading()">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Instalación</th>
+                <th>Horario</th>
+                <th>Estado</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let reserva of misReservas()">
+                <td>{{ reserva.data_reserva | date }}</td>
+                <!-- Usamos o operador seguro '?' por se a relación non se cargou -->
+                <td>{{ reserva.instalacion?.nome }}</td>
+                
+                <!-- CORRECCIÓN APLICADA: Usamos la relación 'horario' para obtener la hora -->
+                <!-- Esto es más robusto que usar los campos de la reserva directamente. -->
+                <td>{{ reserva.horario?.hora_inicio | slice:0:5 }} - {{ reserva.horario?.hora_fin | slice:0:5 }}</td>
+                
+                <td>
+                    <span [ngClass]="{'estado-confirmada': reserva.estado === 'Confirmada', 'estado-cancelada': reserva.estado === 'Cancelada'}">
+                        {{ reserva.estado }}
+                    </span>
+                </td>
+                
+                <td>
+                    <!-- Botón de cancelación visible solo si el estado es 'Confirmada' -->
+                    <button 
+                        *ngIf="reserva.estado === 'Confirmada'" 
+                        (click)="onCancelar(reserva.id_reserva)"
+                        class="btn-cancelar"
+                    >
+                        Cancelar
+                    </button>
+                    <span *ngIf="reserva.estado === 'Cancelada'" class="text-gray-500">
+                        N/A
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

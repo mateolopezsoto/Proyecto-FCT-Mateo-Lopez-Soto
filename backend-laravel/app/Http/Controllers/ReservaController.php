@@ -98,5 +98,14 @@ class ReservaController extends Controller
         return response()->json(['message' => 'Reserva confirmada!', 'reserva' => $reserva], Response::HTTP_CREATED);
     }
     
-    // ... (misReservas y otros métodos)
+    public function misReservas()
+    {
+        $userId = Auth::id(); 
+
+        $reservas = Reserva::where('id_usuario', $userId)
+                            ->with(['instalacion.tipo', 'horario'])
+                            ->get();
+
+        return response()->json($reservas);
+    }
 }

@@ -1,7 +1,7 @@
 import { Component, inject, signal, computed, OnInit } from '@angular/core'; 
 import { CommonModule, SlicePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router'; // IMPORTACIÓN CORREGIDA
+import { Router, RouterModule, RouterLink } from '@angular/router'; // IMPORTACIÓN CORREGIDA
 import { AuthService } from '../services/auth.service';
 import { ReservaService, Instalacion, Horario } from '../services/reserva.service';
 import Swal from 'sweetalert2';
@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
   selector: 'app-reservas',
   standalone: true,
   // SlicePipe es necesario para cortar la hora (HH:MM:SS -> HH:MM) en el template
-  imports: [CommonModule, FormsModule, SlicePipe], 
+  imports: [CommonModule, FormsModule, SlicePipe, RouterLink], 
   templateUrl: './reservas.component.html',
   styleUrls: ['./reservas.component.scss'] // El estilo está en el HTML
 })

@@ -69,6 +69,12 @@ export const routes: Routes = [
     canActivate: [authGuard] // Solo requiere estar logueado
   },
 
+  {
+    path: 'mis-reservas',
+    loadComponent: () => import('./mis-reservas/mis-reservas.component').then(c => c.MisReservasComponent),
+    canActivate: [authGuard]
+  },
+
 
   // Ruta 404/Wildcard
   { path: '**', redirectTo: ''}, 
