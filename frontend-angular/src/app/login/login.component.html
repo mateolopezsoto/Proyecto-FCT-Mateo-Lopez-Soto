@@ -1,0 +1,41 @@
+<div class="login-container">
+  <!-- Panel izquierdo -->
+  <div class="left-panel">
+    <img src="/assets/logo_principal.png" alt="Logo Empresa" class="logo">
+    <h1>Benvido/a ao Portal de Reservas</h1>
+    <p>Accede para xestionar as reservas das instalacións municipais.</p>
+  </div>
+
+  <!-- Panel derecho -->
+  <div class="right-panel">
+    <form (ngSubmit)="onLogin()" [formGroup]="loginForm" class="login-form">
+      <h2>Iniciar sesión</h2>
+
+      <div class="form-group">
+        <label for="correo">Correo electrónico</label>
+        <input type="email" id="correo" formControlName="correo" placeholder="exemplo@correo.com">
+        <div class="error" *ngIf="loginForm.get('correo')?.invalid && loginForm.get('correo')?.touched">
+          Correo obrigatorio e válido
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="contrasinal">Contrasinal</label>
+        <input type="password" id="contrasinal" formControlName="contrasinal" placeholder="••••••••">
+        <div class="error" *ngIf="loginForm.get('contrasinal')?.invalid && loginForm.get('contrasinal')?.touched">
+          Contrasinal obrigatorio (mín. 6 caracteres)
+        </div>
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="authService.loading()">
+        <i class="fas fa-spinner fa-spin" *ngIf="authService.loading()"></i>
+        {{ authService.loading() ? 'Entrando...' : 'Iniciar sesión' }}
+      </button>
+
+      <div class="actions">
+        <a routerLink="/registro" class="link">Rexistrarse</a>
+        <a routerLink="/olvido-contrasinal" class="link">Esquecín o contrasinal</a>
+      </div>
+    </form>
+  </div>
+</div>

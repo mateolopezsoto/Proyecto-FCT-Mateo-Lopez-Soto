@@ -1,0 +1,106 @@
+<div class="container">
+    <div class="sidebar">
+        <!-- Click en el avatar dispara el input oculto -->
+        <div class="avatar-container" (click)="triggerFileInput()">
+            
+            <!-- Input oculto -->
+            <input 
+                type="file" 
+                id="fileInput" 
+                style="display: none;" 
+                accept="image/*"
+                (change)="onFileSelected($event)"
+            >
+
+            <!-- Mostrar Foto Real o Iniciales -->
+            <img *ngIf="previewUrl" [src]="previewUrl" class="avatar-img" alt="Foto de perfil">
+            
+            <div *ngIf="!previewUrl" class="avatar-placeholder">
+                {{ authService.usuario()?.nome?.charAt(0) | uppercase }}
+            </div>
+            
+            <span class="edit-icon">📷</span>
+        </div>
+        
+        <h3 class="user-name">{{ authService.usuario()?.nome }}</h3>
+        
+        <ul class="menu-lateral">
+            <li [class.active]="seccionActiva() === 'datos'" (click)="cambiarSeccion('datos')">
+                Datos persoais
+            </li>
+            <li [class.active]="seccionActiva() === 'password'" (click)="cambiarSeccion('password')">
+                Cambiar contrasinal
+            </li>
+            <li class="logout-item" (click)="authService.logout()">
+                Pechar sesión
+            </li>
+        </ul>
+        
+        <button routerLink="/reservas" class="back-btn">← Volver ao Panel</button>
+    </div>
+
+    <!-- El resto del HTML (formularios) sigue igual -->
+    <div class="main-content">
+        <!-- ... (Formularios de datos y contraseña sin cambios) ... -->
+        
+        <!-- FORMULARIO DATOS -->
+        <div *ngIf="seccionActiva() === 'datos'">
+            <h1>Datos Persoais</h1>
+            <form [formGroup]="perfilForm" (ngSubmit)="onUpdateProfile()">
+                <div>
+                    <label for="nome">Nome:</label>
+                    <input type="text" id="nome" formControlName="nome">
+                </div>
+                <div>
+                    <label for="apelidos">Apelidos:</label>
+                    <input type="text" id="apelidos" formControlName="apelidos">
+                </div>
+                <div>
+                    <label for="correo">Correo electrónico:</label>
+                    <input type="email" id="correo" formControlName="correo">
+                </div>
+                <div>
+                    <label for="telefono">Teléfono:</label>
+                    <input type="tel" id="telefono" formControlName="telefono">
+                </div>
+
+                <div class="form-buttons">
+                    <button type="submit" class="save-btn" [disabled]="perfilForm.invalid || loading()">
+                        {{ loading() ? 'Gardando...' : 'Gardar cambios' }}
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- FORMULARIO CONTRASINAL -->
+        <div *ngIf="seccionActiva() === 'password'">
+            <h1>Cambiar Contrasinal</h1>
+            <form [formGroup]="passwordForm" (ngSubmit)="onUpdatePassword()">
+                <div>
+                    <label for="current_password">Contrasinal Actual:</label>
+                    <input type="password" id="current_password" formControlName="current_password" placeholder="Introduce o teu contrasinal actual">
+                </div>
+                
+                <div>
+                    <label for="password">Nova Contrasinal:</label>
+                    <input type="password" id="password" formControlName="password" placeholder="Mín. 8 caracteres, maiúscula, símbolo...">
+                </div>
+
+                <div>
+                    <label for="password_confirmation">Repetir Nova Contrasinal:</label>
+                    <input type="password" id="password_confirmation" formControlName="password_confirmation">
+                </div>
+
+                <div class="error-msg" *ngIf="passwordForm.errors?.['mismatch'] && passwordForm.get('password_confirmation')?.touched">
+                    As contrasinais non coinciden.
+                </div>
+
+                <div class="form-buttons">
+                    <button type="submit" class="save-btn" [disabled]="passwordForm.invalid || loading()">
+                        {{ loading() ? 'Cambiando...' : 'Actualizar Contrasinal' }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

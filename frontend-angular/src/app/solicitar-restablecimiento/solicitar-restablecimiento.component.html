@@ -1,0 +1,21 @@
+<div class="restablecer-container">
+    <form [formGroup]="forgotPasswordForm" (ngSubmit)="onSubmit()" class="restablecer-form">
+        <h2>Restablecer Contrasinal</h2>
+        <p>Introduce o teu correo electrónico para recibir o enlace de restablecemento.</p>
+
+        <div class="form-group">
+            <label for="correo">Correo electrónico</label>
+            <input type="email" id="correo" formControlName="correo" placeholder="exemplo@correo.com">
+            <div class="error" *ngIf="forgotPasswordForm.get('correo')?.invalid && forgotPasswordForm.get('correo')?.touched">
+                O correo debe ser válido e é obrigatorio.
+            </div>
+        </div>
+
+        <button type="submit" class="btn-primary" [disabled]="forgotPasswordForm.invalid || loading()">
+            <i class="fas fa-spinner fa-spin" *ngIf="loading()"></i>
+            {{ loading() ? 'Enviando...' : 'Enviar Enlace' }}
+        </button>
+        
+        <a routerLink="/" class="link-back">← Volver ao Login</a>
+    </form>
+</div>
