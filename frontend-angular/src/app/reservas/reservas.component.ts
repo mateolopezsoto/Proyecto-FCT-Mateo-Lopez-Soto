@@ -121,7 +121,6 @@ export class ReservasComponent implements OnInit {
 
     if (result.isConfirmed && result.value) {
         try {
-            // El servicio ahora espera hora_inicio, no id_horario
             await this.reservaService.reservar({
                 id_instalacion: result.value.id_instalacion,
                 hora_inicio: result.value.hora_inicio, // HH:MM

@@ -152,7 +152,7 @@ $request->validate([
             return response()->json(['message' => 'Non existe unha solicitude de restablecemento para este correo.'], 400);
         }
 
-        // 3. Verificaciones de seguridad: Expiración y hash del token (Asumiendo corrección UTC)
+        // 3. Verificaciones de seguridad: Expiración y hash del token
         $tokenCreatedAt = \Carbon\Carbon::parse($tokenRecord->created_at);
         if ($tokenCreatedAt->addMinutes(60)->isPast()) {
             return response()->json(['message' => 'O token expirou.'], 400);

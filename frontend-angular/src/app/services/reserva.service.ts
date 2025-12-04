@@ -26,7 +26,7 @@ export interface Horario {
   hora_fin: string;
 }
 
-// NUEVA INTERFAZ: Estructura de las reservas para la vista Histórico
+// Estructura de las reservas para la vista Histórico
 export interface ReservaUsuario {
   id_reserva: number;
   data_reserva: string;
@@ -55,9 +55,8 @@ export class ReservaService {
   horarios = signal<Horario[]>([]);
   loading = signal(false);
 
-  // CONSTRUCTOR: La carga inicial ahora se controla desde ngOnInit del componente
+  // CONSTRUCTOR: La carga inicial se controla desde ngOnInit del componente
   constructor() { 
-    // Se elimina el effect que causaba el bucle infinito
   }
 
   // Carga los datos del catálogo (Instalaciones, Tipos, Horarios)
@@ -71,7 +70,6 @@ export class ReservaService {
       let horarios: Horario[] =  [];
       
       // LLAMADAS CONCURRENTES PARA CARGAR EL CATÁLOGO
-      // El error 401 que te afecta aquí se resuelve con la limpieza de la APP_KEY.
       // Se usan try/catch individuales para no detener la carga si uno falla.
 
       try {

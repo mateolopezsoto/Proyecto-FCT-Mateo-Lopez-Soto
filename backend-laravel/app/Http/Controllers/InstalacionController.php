@@ -19,7 +19,7 @@ class InstalacionController extends Controller
     private function checkAdmin()
     {
         $user = Auth::user();
-        if (!$user || $user->rol || $user->rol->nome_rol !== "Administrador") {
+        if (!$user || !$user->rol || $user->rol->nome_rol !== "Administrador") {
             abort(Response::HTTP_FORBIDDEN, 'Acceso denegado. Require permisos de administrador');
         }
     }
@@ -32,7 +32,6 @@ class InstalacionController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
      * Retorna todas las instalaciones con su estado de disponibilidad HOY.
      */
     public function index(Request $request)

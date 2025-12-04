@@ -34,11 +34,6 @@ class Reserva extends Model
         return $this->belongsTo(Instalacion::class, 'id_instalacion', 'id_instalacion');
     }
 
-    public function administrador(): BelongsTo
-    {
-        return $this->belongsTo(Administrador::class, 'id_admin', 'id_admin');
-    }
-
     public function horario(): BelongsTo
     {
         return $this->belongsTo(Horario::class, 'id_horario', 'id_horario');

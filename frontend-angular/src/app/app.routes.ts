@@ -93,6 +93,18 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
 
+  {
+    path: 'admin',
+    canActivate: [authGuard, adminGuard],
+    children: [
+      {
+        path: 'instalacions',
+        loadComponent: () => import('./admin/admin.component').then(c => c.AdminComponent)
+      },
+      { path: '', redirectTo: 'instalacions', pathMatch: 'full' }
+    ]
+  },
+
 
   // Ruta 404/Wildcard
   { path: '**', redirectTo: ''}, 

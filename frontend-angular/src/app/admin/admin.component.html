@@ -1,0 +1,71 @@
+<div class="container">
+    <h1>Panel de Instalacións</h1>
+
+    <!-- Barra Superior -->
+    <div class="top-bar">
+        <button (click)="onEngadir()">Engadir instalación</button>
+        
+        <!-- Filtro por Tipo (Dinámico desde BBDD) -->
+        <select [(ngModel)]="filtroTipoId">
+            <option value="">Filtrar por tipo (Todos)</option>
+            <option *ngFor="let tipo of adminService.tipos()" [value]="tipo.id_tipo">
+                {{ tipo.nome_tipo }}
+            </option>
+        </select>
+
+        <!-- Filtro por Estado (Estático según tu lógica) -->
+        <select [(ngModel)]="filtroEstado" *ngIf="estadosDisponibles">
+             <option value="">Filtrar por estado (Todos)</option>
+             <option *ngFor="let estado of estadosDisponibles" [value]="estado">
+                {{ estado }}
+             </option>
+        </select>
+    </div>
+
+    <!-- Tabla -->
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Tipo</th>
+                <th>Capacidade</th>
+                <th>Estado</th>
+                <th>Accións</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Mensaje de Carga -->
+            <tr *ngIf="adminService.loading()">
+                <td colspan="5" style="text-align: center; padding: 20px; color: #666;">
+                    Cargando datos...
+                </td>
+            </tr>
+
+            <!-- Mensaje Sin Resultados -->
+            <tr *ngIf="!adminService.loading() && instalacionsFiltradas().length === 0">
+                <td colspan="5" style="text-align: center; padding: 20px; color: #666;">
+                    Non se atoparon instalacións.
+                </td>
+            </tr>
+
+            <!-- Filas de Datos -->
+            <tr *ngFor="let inst of instalacionsFiltradas()">
+                <td>{{ inst.nome }}</td>
+                <td>{{ inst.tipo?.nome_tipo }}</td>
+                <td>{{ inst.capacidade }} persoas</td>
+                <td>{{ inst.estado }}</td>
+                <td class="actions">
+                    <button class="edit-btn" (click)="onEditar(inst.id_instalacion)">Editar</button>
+                    <button class="delete-btn" (click)="onEliminar(inst.id_instalacion)">Eliminar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <!-- Botón extra para volver, útil para la navegación -->
+    <div style="margin-top: 20px; text-align: center;">
+        <button class="btn-volver" routerLink="/reservas" style="padding: 10px 20px; background-color: #6c757d; color: white; border: none; border-radius: 8px; cursor: pointer;">
+            ← Volver ao Catálogo
+        </button>
+    </div>
+</div>

@@ -87,5 +87,4 @@ class AdministradorController extends Controller
         }
     }
     
-    // Aquí se añadirían store y update
 }

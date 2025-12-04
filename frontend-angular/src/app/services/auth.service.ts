@@ -197,7 +197,7 @@ export class AuthService {
   }
 
   // ===============================================
-  // PERFIL Y SEGURIDAD (MÉTODOS FALTANTES)
+  //              PERFIL Y SEGURIDAD
   // ===============================================
 
   // Actualizar datos del perfil con FOTO (FormData)

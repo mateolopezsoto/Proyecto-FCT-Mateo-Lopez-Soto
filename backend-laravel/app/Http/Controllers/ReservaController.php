@@ -25,14 +25,12 @@ class ReservaController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
      * Endpoint: POST /api/reservas
      */
     public function store(Request $request)
     {
         // 1. VALIDACIÓN DE ENTRADA BÁSICA
         $request->validate([
-            // CORRECCIÓN CLAVE: Usamos el nombre de la tabla que Laravel crea: 'instalacions' (plural, minúscula)
             'id_instalacion' => 'required|exists:Instalacion,id_instalacion', 
             'hora_inicio' => 'required|date_format:H:i', // Espera HH:MM
             'data_reserva' => 'required|date|after_or_equal:today'
@@ -56,7 +54,7 @@ class ReservaController extends Controller
             throw ValidationException::withMessages(['hora_inicio' => ['A reserva debe estar entre as 08:00 e as 22:00.']]);
         }
 
-        // 3. BUSCAR/CREAR HORARIO PARA ID_HORARIO (Seguindo a lóxica orixinal da BBDD)
+        // 3. BUSCAR/CREAR HORARIO PARA ID_HORARIO
         $horario = Horario::firstOrCreate(
             [
                 'dia_semana' => $diaSemana,
