@@ -8,9 +8,22 @@ use App\Models\Horario;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Reserva;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Models\TipoInstalacion;
+use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 class InstalacionController extends Controller
 {
+
+    private function checkAdmin()
+    {
+        $user = Auth::user();
+        if (!$user || $user->rol || $user->rol->nome_rol !== "Administrador") {
+            abort(Response::HTTP_FORBIDDEN, 'Acceso denegado. Require permisos de administrador');
+        }
+    }
+
     // Función de ayuda para obtener el día de la semana en gallego
     protected function getDiaSemanaGallego(Carbon $date): string
     {
@@ -42,7 +55,7 @@ class InstalacionController extends Controller
                     'id_tipo' => $i->tipo?->id_tipo,
                     'nome_tipo' => $i->tipo?->nome_tipo
                 ],
-                // CORRECCIÓN: Solo bloqueamos el botón si la instalación está rota/mantenimiento.
+                // Solo bloqueamos el botón si la instalación está rota/mantenimiento.
                 // Si hay huecos libres o no, eso se valida al intentar reservar una hora concreta.
                 'disponible' => $esta_dispoñible 
             ];
@@ -50,6 +63,44 @@ class InstalacionController extends Controller
         
         return response()->json($instalacions);
     }
+
+    public function indexAdmin() 
+    {
+        $this->checkAdmin();
+
+        $instalacions = Instalacion::with('tipo')->get();
+
+        $data = $instalacions->map(function ($inst) {
+            return [
+                'id_instalacion' => $inst->id_instalacion,
+                'nome' => $inst->nome,
+                'capacidade' => $inst->capacidade,
+                'estado' => $inst->estado,
+                'id_tipo' => $inst->id_tipo,
+                'tipo' => [
+                    'id_tipo' => $inst->tipo->id_tipo,
+                    'nome_tipo' => $inst->tipo->nome_tipo
+                ],
+            ];
+        });
+
+        return response()->json($data);
+    }
     
-    // ... (otros métodos)
+    public function destroyInstalacion(int $id) {
+        $this->checkAdmin();
+
+        try {
+            $instalacion = Instalacion::findOrFail($id);
+
+            if ($instalacion->reservas()->where('estado', 'Confirmada')->where('data_reserva', '>=', Carbon::today())->exists()) {
+                return response()->json(['message' => 'Non se pode eliminar unha instalación con reservas futuras activas'], Response::HTTP_CONFLICT);
+            }
+
+            $instalacion->delete();
+            return response()->json(['message' => 'Instalación eliminada con éxito'], Response::HTTP_OK);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Instalacion non encontrada'], Response::HTTP_NOT_FOUND);
+        }
+    }
 }

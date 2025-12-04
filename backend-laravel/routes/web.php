@@ -31,5 +31,9 @@ Route::prefix('api')
             Route::put('/reservas/{id}/cancelar', [ReservaController::class, 'cancelarReserva']);
             Route::post('/user/profile', [UsuarioController::class, 'updateProfile']);
             Route::put('/user/password', [UsuarioController::class, 'updatePassword']);
+            Route::prefix('admin')->group(function() {
+                Route::get('/instalacions', [InstalacionController::class, 'indexAdmin']);
+                Route::delete('/instalacions/{id}', [InstalacionController::class, 'destroyInstalacion']);
+            });
         });
 });

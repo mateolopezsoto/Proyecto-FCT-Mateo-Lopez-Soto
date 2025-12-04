@@ -25,9 +25,9 @@ class Instalacion extends Model
         return $this->belongsTo(TipoInstalacion::class, 'id_tipo', 'id_tipo');
     }
 
-    public function administrador(): BelongsTo
+    public function usuario(): BelongsTo
     {
-        return $this->belongsTo(Administrador::class, 'id_admin', 'id_admin');
+        return $this->belongsTo(Usuario::class, 'usuario_id', 'id_usuario');
     }
 
     public function reservas(): HasMany
