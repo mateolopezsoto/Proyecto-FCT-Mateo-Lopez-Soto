@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\Reserva;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Models\TipoInstalacion;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -42,7 +43,6 @@ class InstalacionController extends Controller
             $estado_normalizado = strtolower($i->estado);
             
             // La instalación está disponible para reservar si NO está en mantenimiento ni clausurada.
-            // Asumimos que el estado válido para reservar es 'disponible'.
             $esta_dispoñible = $estado_normalizado === 'disponible';
             
             return [
@@ -100,6 +100,37 @@ class InstalacionController extends Controller
             return response()->json(['message' => 'Instalación eliminada con éxito'], Response::HTTP_OK);
         } catch (ModelNotFoundException $e) {
             return response()->json(['message' => 'Instalacion non encontrada'], Response::HTTP_NOT_FOUND);
+        } catch (QueryException $e) {
+            if ($e->errorInfo[1] == 1451) {
+                return response()->json([
+                    'message' => 'Non se pode eliminar: Esta instalación ten historial de reservas pasadas'
+                ], Response::HTTP_CONFLICT);
+            }
+
+            return response()->json(['message' => 'Erro interno da base de datos'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public function store(Request $request) {
+        $this->checkAdmin();
+
+        $request->validate([
+            'nome' => 'required|string|max:100|unique:Instalacion,nome',
+            'id_tipo' => 'required|exists:TipoInstalacion,id_tipo',
+            'capacidade' => 'required|integer|max:50',
+            'estado' => 'required|string|max:50'
+        ]);
+
+        $user = Auth::user();
+
+        $instalacion = Instalacion::create([
+            'nome' => $request->nome,
+            'id_tipo' => $request->id_tipo,
+            'capacidade' => $request->capacidade,
+            'estado' => $request->estado,
+            'id_admin' => $user->administrador->id_admin ?? 1
+        ]);
+
+        return response()->json(['message' => 'Instalación creada correctamente', 'instalación' => $instalacion], Response::HTTP_CREATED);
     }
 }

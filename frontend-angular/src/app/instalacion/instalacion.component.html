@@ -1,0 +1,106 @@
+<div class="page-container">
+  <!-- Cabeceira -->
+  <header>
+    <div class="logo-area">
+      <img src="/assets/logo_principal.png" alt="Logo" style="height: 40px;">
+    </div>
+    <nav class="user-nav">
+        <span>Modo Admin</span>
+    </nav>
+  </header>
+
+  <div class="content-wrapper">
+    <!-- Corpo Principal -->
+    <main class="main-area">
+      
+      <div class="form-header">
+        <h1>Engadir Nova Instalación</h1>
+        <p class="subtitle">Completa os datos para rexistrar unha nova instalación no sistema.</p>
+      </div>
+
+      <form [formGroup]="instalacionForm" (ngSubmit)="onSubmit()" class="admin-form">
+        
+        <!-- Campo: Nome -->
+        <div class="form-group">
+          <label for="nome">Nome da Instalación</label>
+          <input 
+            type="text" 
+            id="nome" 
+            formControlName="nome" 
+            placeholder="Ex: Pista de Pádel 3"
+            [class.invalid]="instalacionForm.get('nome')?.invalid && instalacionForm.get('nome')?.touched"
+          >
+          <div class="error-msg" *ngIf="instalacionForm.get('nome')?.invalid && instalacionForm.get('nome')?.touched">
+            O nome é obrigatorio (máx. 100 caracteres).
+          </div>
+        </div>
+
+        <!-- Campo: Tipo (Select + Botón Crear) -->
+        <div class="form-group">
+          <label for="id_tipo">Tipo</label>
+          <div class="select-wrapper">
+            <select 
+                id="id_tipo" 
+                formControlName="id_tipo"
+                [class.invalid]="instalacionForm.get('id_tipo')?.invalid && instalacionForm.get('id_tipo')?.touched"
+            >
+                <option value="">Selecciona un tipo</option>
+                <option *ngFor="let tipo of adminService.tipos()" [value]="tipo.id_tipo">
+                {{ tipo.nome_tipo }}
+                </option>
+            </select>
+            
+            <!-- BOTÓN AÑADIR TIPO -->
+            <button type="button" (click)="onCrearTipo()" class="btn-add-type" title="Crear novo tipo">
+                <i class="fa-solid fa-plus"></i>
+            </button>
+          </div>
+          
+          <div class="error-msg" *ngIf="instalacionForm.get('id_tipo')?.invalid && instalacionForm.get('id_tipo')?.touched">
+            Debes seleccionar un tipo.
+          </div>
+        </div>
+
+        <!-- Campo: Capacidade -->
+        <div class="form-group">
+          <label for="capacidade">Capacidade (persoas)</label>
+          <input 
+            type="number" 
+            id="capacidade" 
+            formControlName="capacidade" 
+            min="1"
+            [class.invalid]="instalacionForm.get('capacidade')?.invalid && instalacionForm.get('capacidade')?.touched"
+          >
+          <div class="error-msg" *ngIf="instalacionForm.get('capacidade')?.invalid && instalacionForm.get('capacidade')?.touched">
+            A capacidade debe ser polo menos 1.
+          </div>
+        </div>
+
+        <!-- Campo: Estado -->
+        <div class="form-group">
+          <label for="estado">Estado Inicial</label>
+          <select id="estado" formControlName="estado">
+            <option *ngFor="let est of estadosDisponibles" [value]="est">{{ est }}</option>
+          </select>
+        </div>
+
+        <!-- Botóns de Acción -->
+        <div class="form-actions">
+          <button type="button" class="btn-cancel" routerLink="/admin/instalacions">
+            <i class="fa-solid fa-xmark"></i> Cancelar
+          </button>
+          <button type="submit" class="btn-save" [disabled]="instalacionForm.invalid || adminService.loading()">
+            <i class="fa-solid fa-floppy-disk"></i> 
+            {{ adminService.loading() ? 'Gardando...' : 'Gardar Instalación' }}
+          </button>
+        </div>
+
+      </form>
+    </main>
+  </div>
+
+  <!-- Pé de páxina -->
+  <footer>
+    <p>&copy; 2025 Xestión de Reservas - Panel de Administración</p>
+  </footer>
+</div>

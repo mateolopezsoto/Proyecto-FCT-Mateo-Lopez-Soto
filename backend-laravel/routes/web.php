@@ -7,6 +7,7 @@ use App\Http\Controllers\InstalacionController;
 use App\Http\Controllers\TipoInstalacionController;
 use App\Http\Controllers\ReservaController;
 use App\Http\Controllers\HorarioController;
+use App\Models\TipoInstalacion;
 
 Route::prefix('api')
     ->withoutMiddleware(['web']) // desactiva todo el middleware web, incluido CSRF
@@ -31,9 +32,11 @@ Route::prefix('api')
             Route::put('/reservas/{id}/cancelar', [ReservaController::class, 'cancelarReserva']);
             Route::post('/user/profile', [UsuarioController::class, 'updateProfile']);
             Route::put('/user/password', [UsuarioController::class, 'updatePassword']);
+            Route::post('/tipos-instalacion', [TipoInstalacionController::class, 'store']);
             Route::prefix('admin')->group(function() {
                 Route::get('/instalacions', [InstalacionController::class, 'indexAdmin']);
                 Route::delete('/instalacions/{id}', [InstalacionController::class, 'destroyInstalacion']);
+                Route::post('/instalacions', [InstalacionController::class, 'store']);
             });
         });
 });

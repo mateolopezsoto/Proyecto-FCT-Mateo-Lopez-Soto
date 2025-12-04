@@ -37,9 +37,8 @@ export class ReservasComponent implements OnInit {
   });
 
   // El effect de carga automática fue eliminado del servicio para evitar el bucle.
-  // Ahora controlamos la carga aquí.
   ngOnInit(): void {
-    if (this.authService.estaLogueado() && this.reservaService.instalacions().length === 0) {
+    if (this.authService.estaLogueado()) {
       this.reservaService.cargarDatos();
     }
   }

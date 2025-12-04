@@ -4,6 +4,7 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { RestablecerContrasinalComponent } from './restablecer-contrasinal/restablecer-contrasinal.component';
 import { PerfilComponent } from './perfil/perfil.component';
+import { InstalacionComponent } from './instalacion/instalacion.component';
 
 // Función auxiliar para verificar la autenticación (usa la misma lógica que el Guard de Reservas)
 const authGuard = async () => {
@@ -100,6 +101,10 @@ export const routes: Routes = [
       {
         path: 'instalacions',
         loadComponent: () => import('./admin/admin.component').then(c => c.AdminComponent)
+      },
+      {
+        path: 'instalacions/engadir',
+        component: InstalacionComponent
       },
       { path: '', redirectTo: 'instalacions', pathMatch: 'full' }
     ]

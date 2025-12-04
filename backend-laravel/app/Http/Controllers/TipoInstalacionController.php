@@ -6,9 +6,24 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTipoInstalacionRequest;
 use App\Http\Requests\UpdateTipoInstalacionRequest;
 use App\Models\TipoInstalacion;
+use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 class TipoInstalacionController extends Controller
 {
+    /**
+     * Helper para verificar se o usuario é administrador.
+     */
+    private function checkAdmin()
+    {
+        $user = Auth::user();
+        // Verifica si el usuario existe y si su rol cargado es 'Administrador'
+        if (!$user || $user->rol->nome_rol !== 'Administrador') { 
+            return response()->json(['message' => 'Acceso denegado. Se requiere rol de administrador.'], Response::HTTP_FORBIDDEN);
+        }
+        return true;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -32,7 +47,16 @@ class TipoInstalacionController extends Controller
      */
     public function store(StoreTipoInstalacionRequest $request)
     {
-        //
+        $request->validate([
+            'nome_tipo' => 'required|string|max:50|unique:TipoInstalacion,nome_tipo'
+        ]);
+
+        $tipo = TipoInstalacion::create([
+            'nome_tipo' => $request->nome_tipo,
+            'descricion' => 'Creado dende panel admin'
+        ]);
+
+        return response()->json(['message' => 'Tipo creado correctamente', 'tipo' => $tipo], 201);
     }
 
     /**

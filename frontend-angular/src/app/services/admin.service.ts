@@ -82,4 +82,52 @@ export class AdminService {
             }
         }
     }
+
+    async crearInstalacion(datos: any) {
+        this.loading.set(true);
+        try {
+            await lastValueFrom(this.http.post(`${this.apiUrl}/admin/instalacions`, datos));
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Creada!',
+                text: 'A instalación creouse correctamente',
+                confirmButtonColor: '#E2EFDA',
+                confirmButtonText: '<span style="color:#333">Aceptar</span>'
+            });
+
+            await this.cargarDatos();
+            return true;
+        } catch (error: any) {
+            const msg = error.error?.message || 'Erro ao crear a instalación';
+            Swal.fire('Erro', msg, 'error');
+            return false;
+        } finally {
+            this.loading.set(false);
+        }
+    }
+
+    async crearTipoInstalacion(nome: string) {
+        this.loading.set(true);
+        try {
+            await lastValueFrom(this.http.post(`${this.apiUrl}/tipos-instalacion`, { nome_tipo: nome }));
+
+            const tiposData = await lastValueFrom(this.http.get<TipoInstalacion[]>(`${this.apiUrl}/tipos-instalacions`));
+            this.tipos.set(tiposData || []);
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Tipo creado',
+                text: `O tipo "${nome}" foi creado correctamente`,
+                timer: 2000,
+                showConfirmButton: false
+            });
+            return true;
+        } catch(error: any) {
+            Swal.fire('Erro', 'Non se puido crear o tipo. Pode que xa exista', 'error');
+            return false;
+        } finally {
+            this.loading.set(false);
+        }
+    }
 }
