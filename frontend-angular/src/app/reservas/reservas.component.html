@@ -1,70 +1,77 @@
-<header>
-    <!-- Logo -->
-    <!-- Asumo que el logo está en assets -->
-    <img src="/assets/logo_principal.png" alt="Logo Centro Deportivo">
-    
-    <div class="top-buttons">
-        <!-- RUTA 1: As miñas reservas (Histórico) -->
-        <button routerLink="/mis-reservas">As miñas reservas</button>
-        <!-- RUTA 2: Perfil -->
-        <button routerLink="/perfil">Perfil</button>
-        <!-- Acción de Logout -->
-        <button (click)="authService.logout()" class="logout">Pechar sesión</button>
-    </div>
-</header>
-
-<div class="main-container">
-    <!-- Panel lateral de filtros -->
-    <aside class="filters">
-        <label for="tipo">Tipo de instalación</label>
-        <!-- Enlaza al signal filtroTipo y usa datos del servicio -->
-        <select id="tipo" name="tipo" [(ngModel)]="filtroTipo" (ngModelChange)="filtrar()">
-            <option value="">Todos</option>
-            <option *ngFor="let t of reservaService.tipos()" [value]="t.id_tipo">{{ t.nome_tipo }}</option>
-        </select>
-
-        <label for="data">Data</label>
-        <!-- Enlaza al signal filtroData -->
-        <input type="date" id="data" name="data" [(ngModel)]="filtroData" (ngModelChange)="filtrar()">
-
-        <label for="horario">Horario</label>
-        <!-- Lista de Horarios cargada desde el servicio (si se usa para filtrar) -->
-        <select id="horario" name="horario" [(ngModel)]="filtroHorarioId" (ngModelChange)="filtrar()">
-            <option value="">Todos</option>
-            <option *ngFor="let h of reservaService.horarios()" [value]="h.id_horario">
-                {{ h.dia_semana }} ({{ h.hora_inicio | slice:0:5 }} - {{ h.hora_fin | slice:0:5 }})
-            </option>
-        </select>
-    </aside>
-
-    <!-- Corpo principal - grella de tarxetas -->
-    <section class="cards-container">
+<div class="container-reservas">
+    <header>
+        <img src="/assets/logo_principal.png" alt="Logo Centro Deportivo" class="logo">
         
-        <!-- Mensajes de Carga y Error -->
-        <div *ngIf="reservaService.loading()">Cargando datos e dispoñibilidade...</div>
-        <div *ngIf="!reservaService.loading() && instalacionsFiltradas().length === 0" style="grid-column: 1 / -1;">
-            Non se atoparon instalacións dispoñibles que coincidan cos filtros.
+        <div class="top-buttons">
+            <button routerLink="/mis-reservas">As miñas reservas</button> 
+            <button routerLink="/perfil">Perfil</button>
+            <button (click)="authService.logout()" class="logout">Pechar sesión</button>
         </div>
+    </header>
 
-        <div class="card" *ngFor="let inst of instalacionsFiltradas()">
-            <h3>{{ inst.nome }}</h3>
-            <p>Tipo: {{ inst.tipo?.nome_tipo }}</p>
-            <p>Capacidade: {{ inst.capacidade }} persoas</p>
+    <div class="main-container">
+        <!-- Panel lateral -->
+        <aside class="sidebar">
             
-            <p>Disponibilidade: 
-                <!-- Estilo dinámico basado en el booleano 'disponible' -->
-                <span [style.color]="inst.disponible ? 'green' : 'red'">
-                    {{ inst.disponible ? 'Libre' : inst.estado_general }}
-                </span>
-            </p>
+            <!-- ZONA ADMIN -->
+            <div *ngIf="esAdmin()" class="admin-panel">
+                <h3>Administración</h3>
+                <button routerLink="/admin/instalacions" class="btn-admin">
+                    ⚙️ Instalacións
+                </button>
+                <button routerLink="/admin/reservas" class="btn-admin">
+                    📅 Xestionar Reservas
+                </button>
+                <button routerLink="/admin/estadisticas" class="btn-admin">
+                    📊 Estatísticas
+                </button>
+            </div>
+
+            <!-- ZONA FILTROS -->
+            <div class="filters">
+                <h3>Filtros</h3>
+                <label for="tipo">Tipo de instalación</label>
+                <select id="tipo" name="tipo" [(ngModel)]="filtroTipo" (ngModelChange)="filtrar()">
+                    <option value="">Todos</option>
+                    <option *ngFor="let t of reservaService.tipos()" [value]="t.id_tipo">{{ t.nome_tipo }}</option>
+                </select>
+            </div>
+        </aside>
+
+        <!-- Cuerpo principal -->
+        <section class="cards-container">
             
-            <!-- Botón que abre el modal para seleccionar hora/fecha -->
-            <button 
-                (click)="reservar(inst)"
-                [disabled]="!inst.disponible || reservaService.loading()"
-            >
-                Reservar Data e Hora
-            </button>
-        </div>
-    </section>
+            <div *ngIf="reservaService.loading()" class="loading">
+                <i class="fas fa-spinner fa-spin"></i> Cargando instalacións...
+            </div>
+            
+            <div *ngIf="!reservaService.loading() && instalacionsFiltradas().length === 0" class="empty-state">
+                Non se atoparon instalacións dispoñibles.
+            </div>
+
+            <div class="card" *ngFor="let inst of instalacionsFiltradas()">
+                <div class="card-header">
+                    <h3>{{ inst.nome }}</h3>
+                    <span class="badge-tipo">{{ inst.tipo?.nome_tipo }}</span>
+                </div>
+                
+                <div class="card-body">
+                    <p><strong>Capacidade:</strong> {{ inst.capacidade }} persoas</p>
+                    <p><strong>Estado:</strong> 
+                        <span class="estado-badge" [style.color]="inst.disponible ? '#28a745' : '#dc3545'">
+                            {{ inst.disponible ? '🟢 Disponible' : '🔴 ' + inst.estado_general }}
+                        </span>
+                    </p>
+                </div>
+                
+                <button 
+                    class="btn-reservar"
+                    (click)="reservar(inst)"
+                    [disabled]="!inst.disponible || reservaService.loading()"
+                >
+                    {{ inst.disponible ? 'Reservar Agora' : 'Non Dispoñible' }}
+                </button>
+            </div>
+        </section>
+    </div>
 </div>

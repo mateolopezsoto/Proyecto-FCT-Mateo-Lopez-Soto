@@ -21,8 +21,6 @@ export class ReservasComponent implements OnInit {
 
   // Estados de Filtro (Usados en el panel lateral)
   filtroTipo = signal('');
-  filtroData = signal(new Date().toISOString().split('T')[0]); // Fecha de hoy por defecto
-  filtroHorarioId = signal(''); 
   
   // Lista generada de horas de inicio posibles (08:00 a 21:00)
   reservableHours: string[] = this.generateReservableHours(); 
@@ -34,15 +32,7 @@ export class ReservasComponent implements OnInit {
     // const horarioId = this.filtroHorarioId(); // No se usa por ahora
 
     return instalacions.filter(inst => {
-        let pasaFiltroTipo = true;
-        // let pasaFiltroHorario = true; // No se usa por ahora
-
-        // 1. FILTRADO POR TIPO
-        if (tipoId) {
-            pasaFiltroTipo = inst.tipo.id_tipo === +tipoId;
-        }
-        
-        return pasaFiltroTipo;
+        return !tipoId || inst.tipo.id_tipo === +tipoId;
     });
   });
 
@@ -52,6 +42,10 @@ export class ReservasComponent implements OnInit {
     if (this.authService.estaLogueado() && this.reservaService.instalacions().length === 0) {
       this.reservaService.cargarDatos();
     }
+  }
+
+  esAdmin(): boolean {
+    return this.authService.usuario()?.rol?.nome_rol === 'Administrador';
   }
 
   constructor() {
@@ -78,6 +72,7 @@ export class ReservasComponent implements OnInit {
   // Lógica para el botón Reservar (Modal SweetAlert2)
   async reservar(instalacion: Instalacion) {
     const reservableHours = this.reservableHours;
+    const hoy = new Date().toISOString().split('T')[0];
 
     // 1. Se construye el HTML de las opciones de horario usando CONCATENACIÓN SEGURA
     const hourOptionsHtml = reservableHours.map(h => 
@@ -89,7 +84,7 @@ export class ReservasComponent implements OnInit {
         '<div style="text-align: left;">',
             '<!-- Campo de Fecha -->',
             '<label for="swal-date">Data:</label>',
-            '<input id="swal-date" type="date" class="swal2-input" value="' + this.filtroData() + '">',
+            '<input id="swal-date" type="date" class="swal2-input" value="' + hoy + '">',
             
             '<!-- Campo de Hora de INICIO (HH:MM) -->',
             '<label for="swal-hour">Hora de Inicio (08:00 - 21:00):</label>',
