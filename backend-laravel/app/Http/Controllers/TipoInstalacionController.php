@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateTipoInstalacionRequest;
 use App\Models\TipoInstalacion;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Request;
 
 class TipoInstalacionController extends Controller
 {
@@ -50,7 +51,7 @@ class TipoInstalacionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreTipoInstalacionRequest $request)
+    public function store(Request $request)
     {
         $this->checkAdmin();
 

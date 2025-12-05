@@ -1,0 +1,85 @@
+<div class="container">
+    <header>
+        <h1>Panel de Estatísticas</h1>
+        <button class="btn-volver" routerLink="/reservas">← Volver ao Catálogo</button>
+    </header>
+
+    <!-- Estado de Carga -->
+    <div *ngIf="adminService.loading()" class="loading">
+        <i class="fas fa-spinner fa-spin"></i> Cargando datos...
+    </div>
+
+    <div *ngIf="adminService.estatisticas() as stats">
+        
+        <!-- Contadores superiores -->
+        <div class="stats-counters">
+            <div class="counter">
+                <h2>{{ stats.contadores.reservas }}</h2>
+                <p>Total Reservas</p>
+            </div>
+            <div class="counter">
+                <h2>{{ stats.contadores.instalacions }}</h2>
+                <p>Instalacións Activas</p>
+            </div>
+            <div class="counter">
+                <h2>{{ stats.contadores.usuarios }}</h2>
+                <p>Usuarios Rexistrados</p>
+            </div>
+        </div>
+
+        <!-- Gráficas -->
+        <div class="charts">
+            <!-- Gráfica 1: Reservas por Instalación (Barras) -->
+            <div class="chart">
+                <h3>Reservas por Instalación</h3>
+                
+                <div class="bar-chart-container">
+                    <div *ngFor="let item of stats.graficas.por_instalacion" class="bar-group">
+                        
+                        <span class="label" title="{{ item.nombre }}">
+                            {{ item.nombre }}
+                        </span>
+                        
+                        <div class="bar-wrapper">
+                            <!-- Barra con ancho dinámico -->
+                            <div class="bar" [style.width]="getPorcentaxe(item.total, stats.graficas.por_instalacion)"></div>
+                            <span class="value">{{ item.total }}</span>
+                        </div>
+
+                    </div>
+                    
+                    <div *ngIf="stats.graficas.por_instalacion.length === 0" class="no-data">
+                        Sen datos de reservas por instalación.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráfica 2: Reservas por Hora (Barras temporales) -->
+            <div class="chart">
+                <h3>Reservas por Franxa Horaria</h3>
+                <div class="pie-chart-container">
+                     <div *ngFor="let item of stats.graficas.por_hora" class="time-row">
+                        <span class="time-label">{{ item.hora }}</span>
+                        
+                        <div class="time-bar-wrapper" style="flex: 1; display: flex; align-items: center; background-color: #f0f0f0; border-radius: 6px; height: 24px;">
+                            <div class="time-bar" [style.width]="getPorcentaxe(item.total, stats.graficas.por_hora)"></div>
+                            <!-- SOLO Valor numérico (sin porcentaje) -->
+                            <span class="time-value">{{ item.total }}</span>
+                        </div>
+                     </div>
+                     
+                     <div *ngIf="stats.graficas.por_hora.length === 0" class="no-data">
+                        Sen datos horarios.
+                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botón exportar -->
+        <div class="export-btn">
+            <button (click)="adminService.exportarInforme()" [disabled]="adminService.loading()">
+                Exportar Informe CSV
+            </button>
+        </div>
+    </div>
+</div>

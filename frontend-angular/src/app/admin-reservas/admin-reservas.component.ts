@@ -111,8 +111,23 @@ export class AdminReservasComponent implements OnInit {
   }
 
   onDetalles(reserva: ReservaUsuario) {
-    const horaInicio = reserva.hora_inicio ? reserva.hora_inicio.slice(0, 5): 'N/A';
-    const horaFin = reserva.hora_fin ? reserva.hora_fin.slice(0, 5): 'N/A';
+    let horaInicio = 'N/A';
+    let horaFin = 'N/A';
+
+    if (reserva.horario) {
+      horaInicio = reserva.horario.hora_inicio ? reserva.horario.hora_inicio.slice(0, 5) : 'N/A';
+      horaFin = reserva.horario.hora_fin ? reserva.horario.hora_fin.slice(0, 5) : 'N/A';
+    } else if ((reserva as any).hora_inicio) {
+      horaInicio = (reserva as any).hora_inicio.slice(0, 5);
+      horaFin = (reserva as any).hora_fin.slice(0, 5);
+    }
+
+    const instNome = reserva.instalacion?.nome || 'Instalación descoñecida';
+    const instTipo = reserva.instalacion?.tipo?.nome_tipo || 'Tipo descoñecido';
+
+    const userNome = reserva.usuario? `${reserva.usuario.nome} ${reserva.usuario.apelidos}` : 'Usuario eliminado';
+    const userCorreo = reserva.usuario?.correo || 'N/A';
+    const userTel = reserva.usuario?.telefono || 'N/A';
 
     Swal.fire({
       title: 'Detalles da reserva',
@@ -121,17 +136,18 @@ export class AdminReservasComponent implements OnInit {
           <p><strong>ID Reserva:</strong> ${reserva.id_reserva}</p>
           <hr>
           <h4>Datos do usuario</h4>
-          <p><strong>Nome:</strong> ${reserva.usuario?.nome} ${reserva.usuario?.apelidos}</p>
-          <p><strong>Correo:</strong> ${reserva.usuario?.correo}</p>
-          <p><strong>Teléfono:</strong ${reserva.usuario?.telefono}</p>
+          <p><strong>Nome:</strong> ${userNome}</p>
+          <p><strong>Correo:</strong> ${userCorreo}</p>
+          <p><strong>Teléfono:</strong> ${userTel}</p>
           <hr>
           <h4>Instalación</h4>
-          <p><strong>Nome:</strong ${reserva.instalacion?.nome}</p>
-          <p><strong>Tipo:</strong ${reserva.instalacion?.tipo?.nome_tipo}</p>
-          <p><strong>Horario:</strong ${horaInicio} - ${horaFin}</p>
+          <p><strong>Nome:</strong> ${instNome}</p>
+          <p><strong>Tipo:</strong> ${instTipo}</p>
+          <p><strong>Horario:</strong> ${horaInicio} - ${horaFin}</p>
         </div>
         `,
-        confirmButtonText: 'Pechar'
+        confirmButtonText: 'Pechar',
+        confirmButtonColor: '#6c757d'
     });
   }
 }

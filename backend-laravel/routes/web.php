@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdministradorController;
 use App\Http\Controllers\AdminReservaController;
+use App\Http\Controllers\EstatisticasController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\InstalacionController;
@@ -42,6 +43,8 @@ Route::prefix('api')
                 Route::put('/instalacions/{id}', [InstalacionController::class, 'update']);
                 Route::get('/reservas', [AdminReservaController::class, 'index']);
                 Route::put('/reservas/{id}/estado', [AdminReservaController::class, 'updateEstado']);
+                Route::get('/estatisticas', [EstatisticasController::class, 'index']);
+                Route::get('/estatisticas/exportar', [EstatisticasController::class, 'exportar']);
             });
         });
 });

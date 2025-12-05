@@ -57,8 +57,8 @@
                     </td>
                     <td>
                         <div class="date-info">
-                            <span class="date">{{ reserva.data_reserva | date:'dd/MM/yyyy' }}</span>
-                            <span class="time">{{ (reserva.hora_inicio || '').slice(0,5) }} - {{ (reserva.hora_fin || '').slice(0,5) }}</span>
+                            <span class="date">{{ reserva.data_reserva | date:'dd/MM/yyyy' }}</span><br>
+                            <span class="time">{{ (reserva.hora_inicio || reserva.horario?.hora_inicio || '??:??') | slice:0:5 }}</span>
                         </div>
                     </td>
                     <td>

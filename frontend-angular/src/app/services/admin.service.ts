@@ -18,6 +18,18 @@ export interface InstalacionAdmin {
     tipo?: TipoInstalacion;
 }
 
+export interface Estatisticas {
+    contadores: {
+        reservas: number;
+        instalacions: number;
+        usuarios: number;
+    };
+    graficas: {
+        por_instalacion: { nombre: string; total: number; }[];
+        por_hora: { hora: string; total: number; }[];
+    }
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -29,6 +41,7 @@ export class AdminService {
     tipos = signal<TipoInstalacion[]>([]);
     loading = signal(false);
     reservas = signal<ReservaUsuario[]>([]);
+    estatisticas = signal<Estatisticas | null>(null);
 
     constructor() {}
 
@@ -114,7 +127,7 @@ export class AdminService {
         try {
             await lastValueFrom(this.http.post(`${this.apiUrl}/tipos-instalacion`, { nome_tipo: nome }));
 
-            const tiposData = await lastValueFrom(this.http.get<TipoInstalacion[]>(`${this.apiUrl}/tipos-instalacions`));
+            const tiposData = await lastValueFrom(this.http.get<TipoInstalacion[]>(`${this.apiUrl}/tipos-instalacion`));
             this.tipos.set(tiposData || []);
 
             Swal.fire({
@@ -195,4 +208,45 @@ export class AdminService {
             this.loading.set(false);
         }
     }
+
+    async cargarEstatisticas() {
+        this.loading.set(true);
+        try {
+            const data = await lastValueFrom(
+                this.http.get<Estatisticas>(`${this.apiUrl}/admin/estatisticas`)
+            );
+            this.estatisticas.set(data);
+            } catch(error) {
+                Swal.fire('Erro', 'Non se puideron cargar as estatísticas', 'error');
+            } finally {
+                this.loading.set(false);
+            }
+     }
+
+     async exportarInforme() {
+        this.loading.set(true);
+        try {
+            const response = await lastValueFrom(
+                this.http.get(`${this.apiUrl}/admin/estatisticas/exportar`, {
+                    responseType: 'blob',
+                    observe: 'response'
+                })
+            );
+
+            const blob = new Blob([response.body!], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'informe_reservas.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+
+            Swal.fire('Éxito', 'Informe descargado correctamente', 'success');
+        } catch (error) {
+            Swal.fire('Erro', 'Non se puido descargar o informe', 'error');
+        } finally {
+            this.loading.set(false);
+        }
+     }
+    
 }
