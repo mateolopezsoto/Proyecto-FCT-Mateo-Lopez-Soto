@@ -1,0 +1,104 @@
+<div class="container">
+    <h1>Panel de Xestión de Reservas</h1>
+
+    <div class="filters">
+        <!-- Filtro de Texto (Usuario) -->
+        <input type="text" [ngModel]="filtroUsuario()" (ngModelChange)="filtroUsuario.set($event)" placeholder="Filtrar por usuario (Nome/Correo)">
+        
+        <!-- Filtro de Fecha -->
+        <input type="date" [ngModel]="filtroData()" (ngModelChange)="filtroData.set($event)" placeholder="Filtrar por data">
+        
+        <button (click)="adminService.cargarReservas()">Recargar</button>
+    </div>
+
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Instalación</th>
+                    <th>Data / Hora</th>
+                    <th>Estado</th>
+                    <th>Accións</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Estado de Carga -->
+                <tr *ngIf="adminService.loading()">
+                    <td colspan="5" style="text-align: center; padding: 20px;">
+                        <div class="loading-spinner">Cargando datos...</div>
+                    </td>
+                </tr>
+                
+                <!-- Estado Sin Resultados (Filtro o Vacío) -->
+                <tr *ngIf="!adminService.loading() && reservasFiltradas().length === 0">
+                    <td colspan="5" style="text-align: center; padding: 30px; font-style: italic; color: #888;">
+                        Non se atoparon reservas.
+                    </td>
+                </tr>
+
+                <!-- Listado de Reservas -->
+                <tr *ngFor="let reserva of reservasFiltradas()">
+                    <td>
+                        <div class="user-info">
+                            <span class="user-name">
+                                {{ reserva.usuario?.nome || 'Usuario Desconocido' }} 
+                                {{ reserva.usuario?.apelidos || '' }}
+                            </span>
+                            <small>{{ reserva.usuario?.correo || 'Sen correo' }}</small>
+                            <small class="user-id" style="font-size: 0.75em; color: #aaa;">ID: {{ reserva.id_usuario }}</small>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="inst-info">
+                            <strong>{{ reserva.instalacion?.nome || 'Instalación borrada' }}</strong>
+                            <small>{{ reserva.instalacion?.tipo?.nome_tipo }}</small>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="date-info">
+                            <span class="date">{{ reserva.data_reserva | date:'dd/MM/yyyy' }}</span>
+                            <span class="time">{{ (reserva.hora_inicio || '').slice(0,5) }} - {{ (reserva.hora_fin || '').slice(0,5) }}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="status-badge" [ngClass]="reserva.estado?.toLowerCase() || ''">
+                            {{ reserva.estado }}
+                        </span>
+                    </td>
+                    <td class="actions">
+                        <button class="status-btn" (click)="onCambiarEstado(reserva)">Estado</button>
+                        <button class="details-btn" (click)="onDetalles(reserva)">Detalles</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- CONTROLES DE PAGINACIÓN -->
+    <div class="pagination-controls" *ngIf="adminService.reservas().length > pageSize()">
+        <button 
+            (click)="cambiarPagina(-1)" 
+            [disabled]="paginaActual() === 1"
+            class="page-btn"
+        >
+            <i class="fa-solid fa-chevron-left"></i> Anterior
+        </button>
+        
+        <span class="page-indicator">
+            Páxina {{ paginaActual() }} de {{ totalPaginas() }}
+        </span>
+        
+        <button 
+            (click)="cambiarPagina(1)" 
+            [disabled]="paginaActual() === totalPaginas()"
+            class="page-btn"
+        >
+            Seguinte <i class="fa-solid fa-chevron-right"></i>
+        </button>
+    </div>
+
+    <div style="margin-top: 20px; text-align: center;">
+        <button class="btn-volver" routerLink="/reservas">← Volver ao Catálogo</button>
+    </div>
+</div>

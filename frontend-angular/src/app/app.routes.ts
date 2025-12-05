@@ -110,6 +110,10 @@ export const routes: Routes = [
         path: 'instalacions/editar/:id',
         component: InstalacionComponent
       },
+      {
+        path: 'reservas',
+        loadComponent: () => import('./admin-reservas/admin-reservas.component').then(c => c.AdminReservasComponent)
+      },
 
       { path: '', redirectTo: 'instalacions', pathMatch: 'full' }
     ]

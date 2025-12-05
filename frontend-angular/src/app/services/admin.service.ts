@@ -1,6 +1,7 @@
 import { Injectable, inject, signal } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { lastValueFrom } from "rxjs";
+import { last, lastValueFrom } from "rxjs";
+import { ReservaUsuario } from "./reserva.service";
 import Swal from 'sweetalert2';
 
 export interface TipoInstalacion {
@@ -27,6 +28,7 @@ export class AdminService {
     instalacions = signal<InstalacionAdmin[]>([]);
     tipos = signal<TipoInstalacion[]>([]);
     loading = signal(false);
+    reservas = signal<ReservaUsuario[]>([]);
 
     constructor() {}
 
@@ -153,6 +155,41 @@ export class AdminService {
         } catch (error: any) {
             const msg = error.error?.message || 'Erro ao actualizar a instalación';
             Swal.fire('Erro', msg, 'error');
+            return false;
+        } finally {
+            this.loading.set(false);
+        }
+    }
+
+    async cargarReservas() {
+        this.loading.set(true);
+        try {
+            const data = await lastValueFrom(
+                this.http.get<ReservaUsuario[]>(`${this.apiUrl}/admin/reservas`)
+            );
+            this.reservas.set(data || []);
+        } catch (error: any) {
+            Swal.fire('Erro', 'Non se puideron cargar as reservas', 'error');
+        } finally {
+            this.loading.set(false);
+        }
+    }
+
+    async cambiarEstadoReserva(id: number, nuevoEstado: string) {
+        this.loading.set(true);
+        try {
+            await lastValueFrom(
+                this.http.put(`${this.apiUrl}/admin/reservas/${id}/estado`, { estado: nuevoEstado })
+            );
+
+            this.reservas.update(list => 
+                list.map(r => r.id_reserva === id ? { ...r, estado: nuevoEstado as any } : r)
+            );
+
+            Swal.fire('Actualizado!', `O estado cambiouse a "${nuevoEstado}"`, 'success');
+            return true;
+        } catch (error: any) {
+            Swal.fire('Erro', 'Non se puido cambiar o estado', 'error');
             return false;
         } finally {
             this.loading.set(false);

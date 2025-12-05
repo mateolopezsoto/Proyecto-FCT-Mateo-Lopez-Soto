@@ -26,6 +26,15 @@ export interface Horario {
   hora_fin: string;
 }
 
+export interface UsuarioReserva {
+  id_usuario: number;
+  nome: string;
+  apelidos: string;
+  correo: string;
+  telefono?: string;
+  
+}
+
 // Estructura de las reservas para la vista Histórico
 export interface ReservaUsuario {
   id_reserva: number;
@@ -39,6 +48,7 @@ export interface ReservaUsuario {
   // Relaciones cargadas para la vista
   instalacion: { nome: string; tipo: TipoInstalacion };
   horario: Horario;
+  usuario?: UsuarioReserva;
 }
 
 

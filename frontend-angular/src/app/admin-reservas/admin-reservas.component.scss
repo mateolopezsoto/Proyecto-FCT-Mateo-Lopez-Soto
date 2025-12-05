@@ -1,0 +1,219 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+:host {
+    display: block;
+    background-color: #f5f5f5;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Barra de filtros */
+.filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.filters input, .filters select {
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    flex: 1;
+}
+
+.filters button {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    background-color: #4285F4;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
+    font-weight: bold;
+}
+
+.filters button:hover {
+    background-color: #357ae8;
+}
+
+/* Tabla de reservas */
+.table-responsive {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(0,0,0,0.05);
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+th {
+    background-color: #4285F4;
+    color: white;
+    font-weight: 600;
+}
+
+tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+/* Info usuario */
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+.user-name { font-weight: 500; }
+.user-info small { color: #777; }
+
+/* Info Instalación - CORRECCIÓN CLAVE */
+.inst-info {
+    display: flex;
+    flex-direction: column; /* Apilar Nombre y Tipo */
+    gap: 2px; /* Espacio vertical reducido */
+}
+.inst-info strong {
+    font-size: 1.05rem;
+    margin-bottom: 3px; /* Pequeño margen para separar del Tipo */
+}
+.inst-info small {
+    color: #555;
+    font-size: 0.85rem;
+}
+
+
+/* Badges de estado */
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+.status-badge.confirmada { background-color: #d4edda; color: #155724; }
+.status-badge.pendente { background-color: #fff3cd; color: #856404; }
+.status-badge.cancelada { background-color: #f8d7da; color: #721c24; }
+
+/* Botóns de acción */
+.actions button {
+    padding: 6px 12px;
+    margin-right: 5px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: white;
+    transition: background 0.3s;
+}
+
+.status-btn {
+    background-color: #FFA500; /* Naranja para estado */
+}
+
+.status-btn:hover {
+    background-color: #e69500;
+}
+
+.details-btn {
+    background-color: #28A745; /* Verde para detalles */
+}
+
+.details-btn:hover {
+    background-color: #218838;
+}
+
+.btn-volver {
+    padding: 10px 20px;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* CONTROLES DE PAGINACIÓN */
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.page-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 15px;
+    background-color: #ffffff;
+    color: #4285F4;
+    border: 1px solid #4285F4;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.page-btn:hover:not([disabled]) {
+    background-color: #DAE8FC; /* Fondo azul claro */
+    box-shadow: 0 2px 4px rgba(66, 133, 244, 0.2);
+}
+
+.page-btn[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: #f0f0f0;
+    color: #999;
+    border-color: #ccc;
+}
+
+.page-indicator {
+    font-size: 1rem;
+    color: #333;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .pagination-controls {
+        gap: 10px;
+    }
+    .page-btn {
+        padding: 8px 12px;
+    }
+}

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdministradorController;
+use App\Http\Controllers\AdminReservaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\InstalacionController;
@@ -39,6 +40,8 @@ Route::prefix('api')
                 Route::post('/instalacions', [InstalacionController::class, 'store']);
                 Route::get('/instalacions/{id}', [InstalacionController::class, 'show']);
                 Route::put('/instalacions/{id}', [InstalacionController::class, 'update']);
+                Route::get('/reservas', [AdminReservaController::class, 'index']);
+                Route::put('/reservas/{id}/estado', [AdminReservaController::class, 'updateEstado']);
             });
         });
 });
