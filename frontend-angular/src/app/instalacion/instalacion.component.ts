@@ -1,7 +1,7 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { AdminService } from '../services/admin.service';
 import Swal from 'sweetalert2';
@@ -18,6 +18,10 @@ export class InstalacionComponent implements OnInit {
   public adminService = inject(AdminService);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
+  isEditing = signal(false);
+  instalacionId: number | null = null;
 
   instalacionForm = this.fb.group({
     nome: ['', [Validators.required, Validators.maxLength(100)]],
@@ -36,6 +40,29 @@ export class InstalacionComponent implements OnInit {
 
     if (this.adminService.tipos().length === 0) {
       this.adminService.cargarDatos();
+    }
+
+    const id = this.route.snapshot.paramMap.get('id');
+
+    if (id) {
+      this.isEditing.set(true);
+      this.instalacionId = +id;
+      this.cargarInstalacion(this.instalacionId);
+    }
+  }
+
+  async cargarInstalacion(id: number) {
+    try {
+      const instalacion = await this.adminService.getInstalacion(id);
+
+      this.instalacionForm.patchValue({
+        nome: instalacion.nome,
+        id_tipo: instalacion.id_tipo.toString(),
+        capacidade: instalacion.capacidade,
+        estado: instalacion.estado
+      });
+    } catch(error) {
+      this.router.navigate(['/admin/instalacions']);
     }
   }
 
@@ -71,7 +98,14 @@ export class InstalacionComponent implements OnInit {
       return;
     }
 
-    const exito = await this.adminService.crearInstalacion(this.instalacionForm.value);
+    let exito = false;
+
+    if (this.isEditing() && this.instalacionId) {
+      exito = await this.adminService.editarInstalacion(this.instalacionId, this.instalacionForm.value);
+    }
+    else {
+      exito = await this.adminService.crearInstalacion(this.instalacionForm.value);
+    }
 
     if (exito) {
       this.router.navigate(['/admin/instalacions']);

@@ -2,6 +2,7 @@
   <!-- Cabeceira -->
   <header>
     <div class="logo-area">
+      <!-- Puedes ajustar la ruta del logo si es necesario -->
       <img src="/assets/logo_principal.png" alt="Logo" style="height: 40px;">
     </div>
     <nav class="user-nav">
@@ -10,12 +11,15 @@
   </header>
 
   <div class="content-wrapper">
-    <!-- Corpo Principal -->
+    <!-- Corpo Principal (Centrado) -->
     <main class="main-area">
       
       <div class="form-header">
-        <h1>Engadir Nova Instalación</h1>
-        <p class="subtitle">Completa os datos para rexistrar unha nova instalación no sistema.</p>
+        <!-- Título Dinámico -->
+        <h1>{{ isEditing() ? 'Editar Instalación' : 'Engadir Nova Instalación' }}</h1>
+        <p class="subtitle">
+            {{ isEditing() ? 'Modifica os datos da instalación existente.' : 'Completa os datos para rexistrar unha nova instalación no sistema.' }}
+        </p>
       </div>
 
       <form [formGroup]="instalacionForm" (ngSubmit)="onSubmit()" class="admin-form">
@@ -38,21 +42,23 @@
         <!-- Campo: Tipo (Select + Botón Crear) -->
         <div class="form-group">
           <label for="id_tipo">Tipo</label>
-          <div class="select-wrapper">
+          <div class="select-wrapper" style="display: flex; gap: 10px;">
             <select 
                 id="id_tipo" 
                 formControlName="id_tipo"
+                style="flex: 1;"
                 [class.invalid]="instalacionForm.get('id_tipo')?.invalid && instalacionForm.get('id_tipo')?.touched"
             >
                 <option value="">Selecciona un tipo</option>
+                <!-- Iteramos sobre os tipos cargados polo AdminService -->
                 <option *ngFor="let tipo of adminService.tipos()" [value]="tipo.id_tipo">
                 {{ tipo.nome_tipo }}
                 </option>
             </select>
             
-            <!-- BOTÓN AÑADIR TIPO -->
+            <!-- Botón para crear nuevo tipo -->
             <button type="button" (click)="onCrearTipo()" class="btn-add-type" title="Crear novo tipo">
-                <i class="fa-solid fa-plus"></i>
+                +
             </button>
           </div>
           
@@ -84,14 +90,14 @@
           </select>
         </div>
 
-        <!-- Botóns de Acción -->
+        <!-- Botóns de Acción Dinámicos -->
         <div class="form-actions">
           <button type="button" class="btn-cancel" routerLink="/admin/instalacions">
-            <i class="fa-solid fa-xmark"></i> Cancelar
+             Cancelar
           </button>
           <button type="submit" class="btn-save" [disabled]="instalacionForm.invalid || adminService.loading()">
-            <i class="fa-solid fa-floppy-disk"></i> 
-            {{ adminService.loading() ? 'Gardando...' : 'Gardar Instalación' }}
+             
+            {{ adminService.loading() ? 'Gardando...' : (isEditing() ? 'Actualizar Instalación' : 'Gardar Instalación') }}
           </button>
         </div>
 

@@ -37,6 +37,8 @@ Route::prefix('api')
                 Route::get('/instalacions', [InstalacionController::class, 'indexAdmin']);
                 Route::delete('/instalacions/{id}', [InstalacionController::class, 'destroyInstalacion']);
                 Route::post('/instalacions', [InstalacionController::class, 'store']);
+                Route::get('/instalacions/{id}', [InstalacionController::class, 'show']);
+                Route::put('/instalacions/{id}', [InstalacionController::class, 'update']);
             });
         });
 });

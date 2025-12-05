@@ -130,4 +130,32 @@ export class AdminService {
             this.loading.set(false);
         }
     }
+
+    async getInstalacion(id: number): Promise<InstalacionAdmin> {
+        return lastValueFrom(
+            this.http.get<InstalacionAdmin>(`${this.apiUrl}/admin/instalacions/${id}`)
+        );
+    }
+
+    async editarInstalacion(id: number, datos: any) {
+        this.loading.set(true);
+        try {
+            await lastValueFrom(this.http.put(`${this.apiUrl}/admin/instalacions/${id}`, datos));
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Actualizada!',
+                text: 'A instalación actualizouse correctamente',
+                confirmButtonColor: '#E2EFDA',
+                confirmButtonText: '<span style="color:#333">Aceptar</span>'
+            });
+            return true;
+        } catch (error: any) {
+            const msg = error.error?.message || 'Erro ao actualizar a instalación';
+            Swal.fire('Erro', msg, 'error');
+            return false;
+        } finally {
+            this.loading.set(false);
+        }
+    }
 }

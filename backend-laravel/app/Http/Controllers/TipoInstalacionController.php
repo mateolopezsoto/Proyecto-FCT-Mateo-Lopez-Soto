@@ -16,12 +16,17 @@ class TipoInstalacionController extends Controller
      */
     private function checkAdmin()
     {
-        $user = Auth::user();
-        // Verifica si el usuario existe y si su rol cargado es 'Administrador'
-        if (!$user || $user->rol->nome_rol !== 'Administrador') { 
-            return response()->json(['message' => 'Acceso denegado. Se requiere rol de administrador.'], Response::HTTP_FORBIDDEN);
+        // 1. Cargamos explícitamente la relación 'rol'
+        /** @var \App\Models\Usuario|null $user */
+        $user = Auth::user(); 
+
+        if ($user) {
+            $user->load('rol');
         }
-        return true;
+        // Verifica si el usuario existe y si su rol cargado es 'Administrador'
+        if (!$user || !$user->rol || $user->rol->nome_rol !== "Administrador") { 
+            abort(Response::HTTP_FORBIDDEN, 'Acceso denegado. Requirese rol de administrador');
+        }
     }
 
     /**
@@ -47,6 +52,8 @@ class TipoInstalacionController extends Controller
      */
     public function store(StoreTipoInstalacionRequest $request)
     {
+        $this->checkAdmin();
+
         $request->validate([
             'nome_tipo' => 'required|string|max:50|unique:TipoInstalacion,nome_tipo'
         ]);
@@ -56,7 +63,7 @@ class TipoInstalacionController extends Controller
             'descricion' => 'Creado dende panel admin'
         ]);
 
-        return response()->json(['message' => 'Tipo creado correctamente', 'tipo' => $tipo], 201);
+        return response()->json(['message' => 'Tipo creado correctamente', 'tipo' => $tipo], Response::HTTP_CREATED);
     }
 
     /**
@@ -74,15 +81,7 @@ class TipoInstalacionController extends Controller
     {
         //
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateTipoInstalacionRequest $request, TipoInstalacion $tipoInstalacion)
-    {
-        //
-    }
-
+    
     /**
      * Remove the specified resource from storage.
      */

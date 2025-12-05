@@ -13,6 +13,7 @@ use App\Models\TipoInstalacion;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Validation\Rule;
 
 class InstalacionController extends Controller
 {
@@ -132,5 +133,32 @@ class InstalacionController extends Controller
         ]);
 
         return response()->json(['message' => 'Instalación creada correctamente', 'instalación' => $instalacion], Response::HTTP_CREATED);
+    }
+
+    public function show($id) {
+        $this->checkAdmin();
+        $instalacion = Instalacion::findOrFail($id);
+        return response()->json($instalacion);
+    }
+
+    public function update(Request $request, $id) {
+        $this->checkAdmin();
+        $instalacion = Instalacion::findOrFail($id);
+
+        $request->validate([
+            'nome' => ['required', 'string', 'max:100', Rule::unique('Instalacion', 'nome')->ignore($id, 'id_instalacion')],
+            'id_tipo' => 'required|exists:TipoInstalacion,id_tipo',
+            'capacidade' => 'required|integer|min:1',
+            'estado' => 'required|string|max:50'
+        ]);
+
+        $instalacion->update([
+            'nome' => $request->nome,
+            'id_tipo' => $request->id_tipo,
+            'capacidade' => $request->capacidade,
+            'estado' => $request->estado
+        ]);
+
+        return response()->json(['message' => 'Instalación actualizada correctamente!', 'instalacion' => $instalacion], 200);
     }
 }

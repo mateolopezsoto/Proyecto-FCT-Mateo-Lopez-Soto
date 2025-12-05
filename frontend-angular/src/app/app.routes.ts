@@ -106,6 +106,11 @@ export const routes: Routes = [
         path: 'instalacions/engadir',
         component: InstalacionComponent
       },
+      {
+        path: 'instalacions/editar/:id',
+        component: InstalacionComponent
+      },
+
       { path: '', redirectTo: 'instalacions', pathMatch: 'full' }
     ]
   },

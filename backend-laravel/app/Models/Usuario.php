@@ -62,6 +62,11 @@ class Usuario extends Authenticatable
         return $this->hasMany(Reserva::class, 'id_usuario', 'id_usuario');
     }
 
+    public function administrador(): HasOne
+    {
+        return $this->hasOne(Administrador::class, 'usuario_id', 'id_usuario');
+    }
+
     public function getEmailForPasswordReset()
     {
         return $this->correo;
