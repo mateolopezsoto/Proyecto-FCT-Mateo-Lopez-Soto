@@ -10,7 +10,7 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
         then: function () {
-            // Este require está duplicado, pero lo mantenemos para no romper el flujo del usuario
+            // Este require está duplicado, pero mantémolo para non romper o fluxo do usuario
             require base_path('routes/web.php'); 
         }
     )
@@ -19,11 +19,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'cors' => \Illuminate\Http\Middleware\HandleCors::class,
         ]);
 
-        // CORRECCIÓN CLAVE PARA TOKENS BEARER: 
-        // Eliminamos EnsureFrontendRequestsAreStateful. Solo mantenemos CORS.
         $middleware->api(prepend: [
             \Illuminate\Http\Middleware\HandleCors::class,
-            // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class, <-- ELIMINADO
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

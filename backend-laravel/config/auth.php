@@ -25,7 +25,6 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            // CORRECCIÓN: Usamos la clase directamente, sin env()
             'model' => App\Models\Usuario::class, 
         ],
     ],
@@ -34,7 +33,7 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
-            'table' => 'password_reset_tokens', // O la tabla que uses
+            'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
         ],

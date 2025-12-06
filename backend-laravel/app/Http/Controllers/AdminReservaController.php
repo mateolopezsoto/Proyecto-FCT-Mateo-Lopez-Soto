@@ -22,6 +22,7 @@ class AdminReservaController extends Controller
     }
     /**
      * Display a listing of the resource.
+     * GET /api/admin/reservas
      */
     public function index()
     {
@@ -34,18 +35,22 @@ class AdminReservaController extends Controller
         return response()->json($reservas);
     }
 
- public function updateEstado(Request $request, int $id) {
-    $this->checkAdmin();
+    /**
+     * PUT /api/admin/reservas/{id}/estado
+     * Actualiza o estado dunha reserva
+     */
+    public function updateEstado(Request $request, int $id) {
+        $this->checkAdmin();
 
-    $request->validate([
-        'estado' => 'required|in:Confirmada,Cancelada,Pendente' 
-    ]);
+        $request->validate([
+            'estado' => 'required|in:Confirmada,Cancelada,Pendente' 
+        ]);
 
-    $reserva = Reserva::findOrFail($id);
-    $reserva->update(['estado' => $request->estado]);
+        $reserva = Reserva::findOrFail($id);
+        $reserva->update(['estado' => $request->estado]);
 
-    return response()->json([
-        'message' => 'Estado da reserva actualizado correctamente', 'reserva' => $reserva
-    ]);
+        return response()->json([
+            'message' => 'Estado da reserva actualizado correctamente', 'reserva' => $reserva
+        ]);
  }
 }

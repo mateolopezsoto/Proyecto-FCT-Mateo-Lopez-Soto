@@ -15,6 +15,10 @@ class Administrador extends Model
         'usuario_id'
     ];
 
+    /**
+     * Relación: 1 administrador
+     * é tamén 1 usuario
+     */
     public function usuario(): BelongsTo
     {
         return $this->belongsTo(Usuario::class, 'usuario_id', 'id_usuario');

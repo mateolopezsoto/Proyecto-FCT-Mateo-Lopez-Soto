@@ -1,7 +1,6 @@
-// src/app/login/login.component.ts
 import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router'; // Inyectamos Router
 import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
@@ -16,6 +15,7 @@ import Swal from 'sweetalert2';
 export class LoginComponent {
   private fb = inject(FormBuilder);
   authService = inject(AuthService);
+  private router = inject(Router); // Inyectamos Router
 
   loginForm = this.fb.group({
     correo: ['', [Validators.required, Validators.email]],
@@ -31,21 +31,13 @@ export class LoginComponent {
     };
 
     await this.authService.login(credenciais);
-    // O servizo xa:
-    // - fai o CSRF
-    // - fai o login
-    // - garda o usuario
-    // - amosa o SweetAlert
-    // - redirixe ao dashboard si todo va bien
-    // - amosa erro se falla
   }
 
-  openForgotPassword(e: Event) {
+  // Eliminamos openForgotPassword. La navegación será un routerLink en el HTML.
+  
+  // Función para navegar al formulario de olvido
+  navigateToForgotPassword(e: Event) {
     e.preventDefault();
-    Swal.fire(
-      'Esquecín o contrasinal',
-      'Contacta con <strong>admin@concello.gal</strong>',
-      'info'
-    );
+    this.router.navigate(['/olvido-contrasinal']);
   }
 }

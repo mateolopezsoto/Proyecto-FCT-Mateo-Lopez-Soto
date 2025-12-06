@@ -16,6 +16,10 @@ class TipoInstalacion extends Model
         'descricion'
     ];
 
+    /**
+     * Relación: 1 tipo de instalación
+     * ten moitas instalacións
+     */
     public function instalacions(): HasMany
     {
         return $this->hasMany(Instalacion::class, 'id_tipo', 'id_tipo');

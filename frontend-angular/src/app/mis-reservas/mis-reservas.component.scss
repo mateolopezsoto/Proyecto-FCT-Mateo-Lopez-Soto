@@ -163,7 +163,4 @@ tbody td {
         font-weight: 600;
         color: #495057;
     }
-    /* Añadir data-label a las celdas para móviles (se hace en el TS o aquí si fueran estáticas) */
-    /* Para esta solución, el maquetado móvil es más complejo de manejar solo con CSS sin data-labels, 
-       pero se prioriza la visualización de la información. */
 }

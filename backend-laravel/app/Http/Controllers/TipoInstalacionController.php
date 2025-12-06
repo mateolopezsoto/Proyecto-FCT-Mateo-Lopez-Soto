@@ -17,14 +17,14 @@ class TipoInstalacionController extends Controller
      */
     private function checkAdmin()
     {
-        // 1. Cargamos explícitamente la relación 'rol'
+        // 1. Cargamos explícitamente a relación 'rol'
         /** @var \App\Models\Usuario|null $user */
         $user = Auth::user(); 
 
         if ($user) {
             $user->load('rol');
         }
-        // Verifica si el usuario existe y si su rol cargado es 'Administrador'
+        // Verifica se o usuario existe e se o seu rol cargado é Administrador
         if (!$user || !$user->rol || $user->rol->nome_rol !== "Administrador") { 
             abort(Response::HTTP_FORBIDDEN, 'Acceso denegado. Requirese rol de administrador');
         }
@@ -32,6 +32,7 @@ class TipoInstalacionController extends Controller
 
     /**
      * Display a listing of the resource.
+     * GET /api/tipos-instalacion
      */
     public function index()
     {
@@ -41,15 +42,8 @@ class TipoInstalacionController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
+     * POST /api/tipos-instalacion
      */
     public function store(Request $request)
     {
@@ -65,29 +59,5 @@ class TipoInstalacionController extends Controller
         ]);
 
         return response()->json(['message' => 'Tipo creado correctamente', 'tipo' => $tipo], Response::HTTP_CREATED);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(TipoInstalacion $tipoInstalacion)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(TipoInstalacion $tipoInstalacion)
-    {
-        //
-    }
-    
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(TipoInstalacion $tipoInstalacion)
-    {
-        //
     }
 }

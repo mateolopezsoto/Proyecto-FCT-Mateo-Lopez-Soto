@@ -13,12 +13,12 @@ use Carbon\Carbon;
 class AdministradorController extends Controller
 {
     /**
-     * Verifica que el usuario autenticado es un administrador.
+     * Verifica que o usuario autenticado é un administrador.
      */
     protected function checkAdminRole()
     {
         $user = Auth::user();
-        // Verifica si el usuario existe y si su rol cargado es 'Administrador'
+        // Verifica se o usuario existe e se o seu rol cargado é Administrador
         if (!$user || $user->rol->nome_rol !== 'Administrador') { 
             return response()->json(['message' => 'Acceso denegado. Se requiere rol de administrador.'], Response::HTTP_FORBIDDEN);
         }
@@ -26,8 +26,8 @@ class AdministradorController extends Controller
     }
 
     /**
-     * Lista todas las instalaciones para el panel de administración.
-     * Endpoint: GET /api/admin/instalacions
+     * Lista todas as instalacións para o panel de administración.
+     * GET /api/admin/instalacions
      */
     public function indexInstalacions()
     {
@@ -37,17 +37,17 @@ class AdministradorController extends Controller
             return $check; // Devuelve 403 Forbidden
         }
 
-        // 2. Obtener TODAS las instalaciones (con el tipo cargado)
+        // 2. Obter TODAS as instalacións (co tipo cargado)
         $instalacions = Instalacion::with('tipo')->get();
 
-        // 3. Mapear los datos para Angular
+        // 3. Mapear os datos para Angular
         $data = $instalacions->map(function ($inst) {
             return [
                 'id_instalacion' => $inst->id_instalacion,
                 'nome' => $inst->nome,
                 'capacidade' => $inst->capacidade,
                 'estado' => $inst->estado,
-                'id_tipo' => $inst->id_tipo, // Usado para el filtro en Angular
+                'id_tipo' => $inst->id_tipo, // Usado para o filtro en Angular
                 'tipo' => [
                     'id_tipo' => $inst->tipo->id_tipo,
                     'nome_tipo' => $inst->tipo->nome_tipo,
@@ -59,8 +59,8 @@ class AdministradorController extends Controller
     }
     
     /**
-     * Elimina una instalación.
-     * Endpoint: DELETE /api/admin/instalacions/{id}
+     * Elimina unha instalación.
+     * DELETE /api/admin/instalacions/{id}
      */
     public function destroyInstalacion(int $id)
     {
@@ -72,7 +72,7 @@ class AdministradorController extends Controller
         try {
             $instalacion = Instalacion::findOrFail($id);
             
-            // Opcional: Impedir eliminar si hay reservas activas (Confirmadas)
+            // Impedir eliminar se hay reservas activas (Confirmadas)
             if ($instalacion->reservas()->where('estado', 'Confirmada')->where('data_reserva', '>=', Carbon::today())->exists()) {
                 return response()->json(['message' => 'No se puede eliminar la instalación porque tiene reservas futuras activas.'], Response::HTTP_CONFLICT);
             }

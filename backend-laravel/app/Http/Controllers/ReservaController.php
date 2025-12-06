@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ReservaController extends Controller
 {
     /**
-     * Devuelve el nombre del día de la semana en gallego.
+     * Devolve o nome do día da semana en galego.
      */
     protected function getDiaSemanaGallego(Carbon $date): string
     {
@@ -25,7 +25,8 @@ class ReservaController extends Controller
     }
 
     /**
-     * Endpoint: POST /api/reservas
+     * Crea unha nova reserva
+     * POST /api/reservas
      */
     public function store(Request $request)
     {
@@ -36,13 +37,13 @@ class ReservaController extends Controller
             'data_reserva' => 'required|date|after_or_equal:today'
         ]);
         
-        // --- LÓGICA DE TIEMPO ---
+        // --- LÓXICA DE TEMPO ---
         $dataReserva = $request->data_reserva;
         $horaInicioString = $request->hora_inicio;
         
-        // Objeto Carbon para la hora de inicio de la reserva
+        // Obxecto Carbon para a hora de inicio da reserva
         $horaInicio = Carbon::createFromFormat('Y-m-d H:i', $dataReserva . ' ' . $horaInicioString);
-        $horaFin = $horaInicio->copy()->addHour(); // Hora de fin es siempre 1 hora después
+        $horaFin = $horaInicio->copy()->addHour(); // Hora de fin é sempre 1 hora despois
         $diaSemana = $this->getDiaSemanaGallego(Carbon::parse($dataReserva));
 
 
@@ -65,7 +66,7 @@ class ReservaController extends Controller
         $idHorario = $horario->id_horario;
 
 
-        // 4. VALIDACIÓN DE SOLAPAMIENTO POR ID_HORARIO
+        // 4. VALIDACIÓN DE SOLAPAMENTO POR ID_HORARIO
         // A táboa Reserva debe ter id_horario e as novas columnas de hora para o solapamento.
         $solapamiento = Reserva::where('id_instalacion', $request->id_instalacion)
             ->where('data_reserva', $dataReserva)
@@ -77,7 +78,7 @@ class ReservaController extends Controller
             return response()->json(['message' => 'Xa existe unha reserva para esa instalación nese horario.'], Response::HTTP_CONFLICT);
         }
 
-        // 5. CREACIÓN DE LA RESERVA
+        // 5. CREACIÓN DA RESERVA
         $userId = auth('sanctum')->id();
         if (!$userId) {
              throw ValidationException::withMessages(['usuario' => ['Non estás autenticado para reservar.']]); 
@@ -97,6 +98,11 @@ class ReservaController extends Controller
         return response()->json(['message' => 'Reserva confirmada!', 'reserva' => $reserva], Response::HTTP_CREATED);
     }
     
+    /**
+     * Amosa todas as reservas
+     * feitas polo usuario actual
+     * GET /api/mis-reservas
+     */
     public function misReservas()
     {
         $userId = Auth::id(); 
@@ -108,6 +114,10 @@ class ReservaController extends Controller
         return response()->json($reservas);
     }
 
+    /**
+     * Cancela unha reserva
+     * PUT /api/reservas/{id}/cancelar
+     */
     public function cancelarReserva(int $id)
     {
         $userId = Auth::id();

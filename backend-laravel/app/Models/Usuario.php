@@ -20,6 +20,9 @@ class Usuario extends Authenticatable
     protected $primaryKey = 'id_usuario';
     public $timestamps = false;
 
+    // Nome do campo que se usará coma Password
+    protected $passwordAttribute = 'contrasinal';
+
     protected $fillable = [
         'nome',
         'apelidos',
@@ -30,12 +33,18 @@ class Usuario extends Authenticatable
         'foto_perfil'
     ];
 
+    // Campos ocultos cando se serializa o modelo
     protected $hidden = [
         'contrasinal',
     ];
 
     protected $appends = ['url_foto'];
 
+    /**
+     * Atributo urlFoto
+     * Devolve a URL pública da foto
+     * ou null se o usuario non ten foto
+     */
     protected function urlFoto(): Attribute
     {
         return Attribute::make(
@@ -46,27 +55,44 @@ class Usuario extends Authenticatable
 
     }
 
-    // Para que Laravel no toque los nombres automáticos
+    /**
+     * Sobreescribe o método que usa Laravel
+     * para obter a contrasinal
+     */
+    
     public function getAuthPassword()
     {
         return $this->contrasinal;
     }
 
+    /**
+     * Relación: 1 usuario
+     * pertence a 1 rol
+     */
     public function rol(): BelongsTo
     {
         return $this->belongsTo(RolUsuario::class, 'id_rol', 'id_rol');
     }
 
+    /**
+     * Relación: 1 usuario
+     * ten moitas reservas
+     */
     public function reservas(): HasMany
     {
         return $this->hasMany(Reserva::class, 'id_usuario', 'id_usuario');
     }
 
+    /**
+     * Relación: 1 usuario
+     * pode ser Administrador
+     */
     public function administrador(): HasOne
     {
         return $this->hasOne(Administrador::class, 'usuario_id', 'id_usuario');
     }
 
+    
     public function getEmailForPasswordReset()
     {
         return $this->correo;

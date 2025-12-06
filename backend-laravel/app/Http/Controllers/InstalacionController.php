@@ -17,7 +17,9 @@ use Illuminate\Validation\Rule;
 
 class InstalacionController extends Controller
 {
-
+    /**
+     * Verifica que o usuario autenticado é un administrador.
+     */
     private function checkAdmin()
     {
         $user = Auth::user();
@@ -26,7 +28,7 @@ class InstalacionController extends Controller
         }
     }
 
-    // Función de ayuda para obtener el día de la semana en gallego
+    // Función de axuda para obter o día da semana en galego
     protected function getDiaSemanaGallego(Carbon $date): string
     {
         Carbon::setLocale('gl'); 
@@ -34,29 +36,30 @@ class InstalacionController extends Controller
     }
 
     /**
-     * Retorna todas las instalaciones con su estado de disponibilidad HOY.
+     * Retorna todas as instalacións co seu estado de dispoñibilidade HOXE.
+     * GET /api/instalacions
      */
     public function index(Request $request)
     {
         $instalacions = Instalacion::with(['tipo'])->get()->map(function ($i) {
             
-            // Normalizamos el estado a minúsculas para comparar
+            // Normalizamos o estado a minúsculas para comparar
             $estado_normalizado = strtolower($i->estado);
             
-            // La instalación está disponible para reservar si NO está en mantenimiento ni clausurada.
+            // A instalación está dispoñible para reservar se NON está en mantemento.
             $esta_dispoñible = $estado_normalizado === 'disponible';
             
             return [
                 'id_instalacion' => $i->id_instalacion,
                 'nome' => $i->nome,
                 'capacidade' => $i->capacidade,
-                'estado_general' => $i->estado, // El texto original (ej. "Disponible", "En Mantemento")
+                'estado_general' => $i->estado, // O texto orixinal (ex. "Disponible", "En Mantemento")
                 'tipo' => [
                     'id_tipo' => $i->tipo?->id_tipo,
                     'nome_tipo' => $i->tipo?->nome_tipo
                 ],
-                // Solo bloqueamos el botón si la instalación está rota/mantenimiento.
-                // Si hay huecos libres o no, eso se valida al intentar reservar una hora concreta.
+                // Só bloqueamos o botón se a instalación está rota/en mantemento.
+                // Se hay ocos libres ou non, eso valídase ao intentar reservar unha hora concreta.
                 'disponible' => $esta_dispoñible 
             ];
         });
@@ -64,6 +67,10 @@ class InstalacionController extends Controller
         return response()->json($instalacions);
     }
 
+    /**
+     * Lista todas as instalacións
+     * GET /api/admin/instalacions
+     */
     public function indexAdmin() 
     {
         $this->checkAdmin();
@@ -87,6 +94,10 @@ class InstalacionController extends Controller
         return response()->json($data);
     }
     
+    /**
+     * Elimina unha instalación
+     * DELETE /api/admin/instalacions/{id}
+     */
     public function destroyInstalacion(int $id) {
         $this->checkAdmin();
 
@@ -112,6 +123,10 @@ class InstalacionController extends Controller
         }
     }
 
+    /**
+     * Crea unha nova instalación
+     * POST /api/admin/instalacions
+     */
     public function store(Request $request) {
         $this->checkAdmin();
 

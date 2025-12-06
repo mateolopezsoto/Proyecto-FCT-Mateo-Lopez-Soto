@@ -14,6 +14,9 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class EstatisticasController extends Controller
 {
+    /**
+     * Verifica que o usuario autenticado é un administrador.
+     */
     private function checkAdmin() {
         /** @var \App\Models\Usuario|null $user */
         $user = Auth::user();
@@ -24,6 +27,12 @@ class EstatisticasController extends Controller
         }
     }
 
+    /**
+     * GET /api/admin/estatisticas
+     * Devolve:
+     *  - Contadores de estatísticas
+     *  - Datos para gráficas
+     */
     public function index() {
         $this->checkAdmin();
 
@@ -68,6 +77,12 @@ class EstatisticasController extends Controller
             ]);
     }
 
+    /**
+     * GET /api/admin/estatisticas/exportar
+     * Xera e descarga un arquivo CSV con:
+     *  - Todas as reservas do sistema
+     *  - Inclúe usuario, instalación e horario
+     */
     public function exportar() {
         $this->checkAdmin();
 

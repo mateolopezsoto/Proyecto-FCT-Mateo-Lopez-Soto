@@ -136,14 +136,14 @@ $request->validate([
             'password' => 'required|confirmed|min:8',
         ]);
 
-        // 1. Buscar al usuario explícitamente por 'correo'
+        // 1. Buscar ao usuario explícitamente por 'correo'
         $user = Usuario::where('correo', $request->email)->first();
 
         if (!$user) {
             return response()->json(['message' => 'Usuario non atopado (Email incorrecto).'], 404);
         }
 
-        // 2. Verificar el token usando el repositorio (Requiere que la tabla password_reset_tokens exista)
+        // 2. Verificar o token usando o repositorio (Require que a tabla password_reset_tokens exista)
         $tokenRecord = DB::table('password_reset_tokens')
             ->where('email', $request->email)
             ->first();
@@ -152,7 +152,7 @@ $request->validate([
             return response()->json(['message' => 'Non existe unha solicitude de restablecemento para este correo.'], 400);
         }
 
-        // 3. Verificaciones de seguridad: Expiración y hash del token
+        // 3. Verificacións de seguridade: Expiración e hash do token
         $tokenCreatedAt = \Carbon\Carbon::parse($tokenRecord->created_at);
         if ($tokenCreatedAt->addMinutes(60)->isPast()) {
             return response()->json(['message' => 'O token expirou.'], 400);
@@ -162,12 +162,12 @@ $request->validate([
             return response()->json(['message' => 'O token é inválido (Hash non coincide).'], 400);
         }
 
-        // 5. CAMBIO DE CONTRASEÑA FINAL:
+        // 5. CAMBIO DE CONTRASINAL FINAL:
         $user->forceFill([
             'contrasinal' => Hash::make($request->password)
         ])->save(); // <--- ELIMINAMOS setRememberToken() AQUÍ
 
-        // 6. Borrar el token usado
+        // 6. Borrar o token usado
         DB::table('password_reset_tokens')->where('email', $request->email)->delete();
 
         event(new PasswordReset($user));
