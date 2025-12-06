@@ -5,7 +5,7 @@
     <div class="top-bar">
         <button (click)="onEngadir()">Engadir instalación</button>
         
-        <!-- Filtro por Tipo (Dinámico desde BBDD) -->
+        <!-- Filtro por Tipo (Dinámico dnde BBDD) -->
         <select [(ngModel)]="filtroTipoId">
             <option value="">Filtrar por tipo (Todos)</option>
             <option *ngFor="let tipo of adminService.tipos()" [value]="tipo.id_tipo">
@@ -13,7 +13,7 @@
             </option>
         </select>
 
-        <!-- Filtro por Estado (Estático según tu lógica) -->
+        <!-- Filtro por Estado (Estático) -->
         <select [(ngModel)]="filtroEstado" *ngIf="estadosDisponibles">
              <option value="">Filtrar por estado (Todos)</option>
              <option *ngFor="let estado of estadosDisponibles" [value]="estado">
@@ -22,7 +22,7 @@
         </select>
     </div>
 
-    <!-- Tabla -->
+    <!-- Táboa -->
     <table>
         <thead>
             <tr>
@@ -34,14 +34,14 @@
             </tr>
         </thead>
         <tbody>
-            <!-- Mensaje de Carga -->
+            <!-- Mensaxe de Carga -->
             <tr *ngIf="adminService.loading()">
                 <td colspan="5" style="text-align: center; padding: 20px; color: #666;">
                     Cargando datos...
                 </td>
             </tr>
 
-            <!-- Mensaje Sin Resultados -->
+            <!-- Mensaxe sen resultados -->
             <tr *ngIf="!adminService.loading() && instalacionsFiltradas().length === 0">
                 <td colspan="5" style="text-align: center; padding: 20px; color: #666;">
                     Non se atoparon instalacións.
@@ -62,7 +62,7 @@
         </tbody>
     </table>
     
-    <!-- Botón extra para volver, útil para la navegación -->
+    <!-- Botón extra para volver, útil para a navegación -->
     <div style="margin-top: 20px; text-align: center;">
         <button class="btn-volver" routerLink="/reservas" style="padding: 10px 20px; background-color: #6c757d; color: white; border: none; border-radius: 8px; cursor: pointer;">
             ← Volver ao Catálogo

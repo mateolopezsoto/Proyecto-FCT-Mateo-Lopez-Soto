@@ -27,11 +27,11 @@ export class MisReservasComponent implements OnInit {
     }
   }
 
-  // Carga las reservas del usuario
+  // Carga as reservas do usuario
   async cargarMisReservas() {
     this.loading.set(true);
     try {
-      // El ReservaService necesita un método para GET /api/mis-reservas
+      // O ReservaService necesita un método para GET /api/mis-reservas
       const reservas = await this.reservaService.cargarHistorico();
       this.misReservas.set(reservas);
     } catch (error) {
@@ -42,7 +42,7 @@ export class MisReservasComponent implements OnInit {
     }
   }
 
-  // Acción para cancelar una reserva
+  // Acción para cancelar unha reserva
   async onCancelar(id: number) {
     const result = await Swal.fire({
       title: 'Queres cancelar esta reserva?',
@@ -60,7 +60,7 @@ export class MisReservasComponent implements OnInit {
       try {
         await this.reservaService.cancelarReserva(id);
         Swal.fire('Cancelada!', 'A reserva foi cancelada con éxito.', 'success');
-        this.cargarMisReservas(); // Recargar la lista
+        this.cargarMisReservas(); // Recargar a lista
       } catch (error) {
         Swal.fire('Erro', 'Non se puido procesar a cancelación.', 'error');
       } finally {

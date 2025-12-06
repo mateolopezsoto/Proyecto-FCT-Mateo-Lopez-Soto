@@ -1,6 +1,6 @@
 <div class="container">
     <div class="sidebar">
-        <!-- Click en el avatar dispara el input oculto -->
+        <!-- Click no avatar dispara o input oculto -->
         <div class="avatar-container" (click)="triggerFileInput()">
             
             <!-- Input oculto -->
@@ -12,7 +12,7 @@
                 (change)="onFileSelected($event)"
             >
 
-            <!-- Mostrar Foto Real o Iniciales -->
+            <!-- Mostrar Foto Real ou Iniciales -->
             <img *ngIf="previewUrl" [src]="previewUrl" class="avatar-img" alt="Foto de perfil">
             
             <div *ngIf="!previewUrl" class="avatar-placeholder">
@@ -40,7 +40,7 @@
     </div>
 
     <div class="main-content">
-        <!-- ... (Formularios de datos y contraseña) ... -->
+        <!-- ... (Formularios de datos e contrasinal) ... -->
         
         <!-- FORMULARIO DATOS -->
         <div *ngIf="seccionActiva() === 'datos'">

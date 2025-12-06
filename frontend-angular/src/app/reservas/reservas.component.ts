@@ -1,7 +1,7 @@
 import { Component, inject, signal, computed, OnInit } from '@angular/core'; 
 import { CommonModule, SlicePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterModule, RouterLink } from '@angular/router'; // IMPORTACIÓN CORREGIDA
+import { Router, RouterModule, RouterLink } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { ReservaService, Instalacion, Horario } from '../services/reserva.service';
 import Swal from 'sweetalert2';
@@ -9,34 +9,32 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-reservas',
   standalone: true,
-  // SlicePipe es necesario para cortar la hora (HH:MM:SS -> HH:MM) en el template
+  // SlicePipe é necesario para cortar a hora (HH:MM:SS -> HH:MM) no template
   imports: [CommonModule, FormsModule, SlicePipe, RouterLink], 
   templateUrl: './reservas.component.html',
-  styleUrls: ['./reservas.component.scss'] // El estilo está en el HTML
+  styleUrls: ['./reservas.component.scss']
 })
 export class ReservasComponent implements OnInit { 
   authService = inject(AuthService);
   reservaService = inject(ReservaService);
-  router = inject(Router); // La inyección es correcta
+  router = inject(Router); 
 
-  // Estados de Filtro (Usados en el panel lateral)
+  // Estados de Filtro (Usados no panel lateral)
   filtroTipo = signal('');
   
-  // Lista generada de horas de inicio posibles (08:00 a 21:00)
+  // Lista xerada de horas de inicio posibles (08:00 a 21:00)
   reservableHours: string[] = this.generateReservableHours(); 
 
-  // Lista Filtrada: Signal calculado que reacciona a los cambios en los datos o en los filtros.
+  // Lista Filtrada: Signal calculado que reacciona aos cambios nos datos ou nos filtros.
   instalacionsFiltradas = computed(() => {
     const instalacions = this.reservaService.instalacions();
     const tipoId = this.filtroTipo();
-    // const horarioId = this.filtroHorarioId(); // No se usa por ahora
 
     return instalacions.filter(inst => {
         return !tipoId || inst.tipo.id_tipo === +tipoId;
     });
   });
 
-  // El effect de carga automática fue eliminado del servicio para evitar el bucle.
   ngOnInit(): void {
     if (this.authService.estaLogueado()) {
       this.reservaService.cargarDatos();
@@ -48,37 +46,37 @@ export class ReservasComponent implements OnInit {
   }
 
   constructor() {
-    // El computed signal 'instalacionsFiltradas' se encarga de la reactividad del filtro.
+    // O computed signal 'instalacionsFiltradas' encárgase da reactividade do filtro.
   }
   
   /**
-   * Genera las horas de inicio válidas de 08:00 a 21:00 (duración de 1h).
+   * Xera as horas de inicio válidas de 08:00 a 21:00 (duración de 1h).
    */
   private generateReservableHours(): string[] {
     const hours = [];
-    // Desde las 08:00 hasta las 21:00 (para terminar a las 22:00)
+    // Dende as 08:00 ata as 21:00 (para rematar as 22:00)
     for (let h = 8; h <= 21; h++) {
         hours.push(`${h.toString().padStart(2, '0')}:00`);
     }
     return hours;
   }
 
-  // Método para forzar la actualización del filtro
+  // Método para forzar a actualización do filtro
   filtrar() {
-    // Se deja vacío porque la reactividad la maneja el computed signal
+    // Deixase vacío porque a reactividade é manexada polo computed signal
   }
 
-  // Lógica para el botón Reservar (Modal SweetAlert2)
+  // Lóxica para o botón Reservar (Modal SweetAlert2)
   async reservar(instalacion: Instalacion) {
     const reservableHours = this.reservableHours;
     const hoy = new Date().toISOString().split('T')[0];
 
-    // 1. Se construye el HTML de las opciones de horario usando CONCATENACIÓN SEGURA
+    // 1. Constrúese o HTML das opcións de horario usando CONCATENACIÓN SEGURA
     const hourOptionsHtml = reservableHours.map(h => 
         '<option value="' + h.slice(0, 5) + '">' + h.slice(0, 5) + '</option>'
     ).join('');
 
-    // 2. Se construye el contenido HTML usando CONCATENACIÓN DE CADENAS SIMPLES
+    // 2. Constrúese o contido HTML usando CONCATENACIÓN DE CADENAS SIMPLES
     const htmlContent = [
         '<div style="text-align: left;">',
             '<!-- Campo de Fecha -->',
@@ -92,17 +90,17 @@ export class ReservasComponent implements OnInit {
                 hourOptionsHtml,
             '</select>',
         '</div>'
-    ].join(''); // Juntamos el array de strings
+    ].join(''); // Xuntamos o array de strings
 
-    // Modal de confirmación para seleccionar Fecha y Hora de INICIO
+    // Modal de confirmación para seleccionar Data e Hora de INICIO
     const result = await Swal.fire({
         title: 'Reservar: ' + instalacion.nome,
-        html: htmlContent, // Se pasa la variable, evitando la interpolación compleja de nuevo
+        html: htmlContent, // Pásase a variable, evitando a interpolación complexa de novo
         focusConfirm: false,
         showCancelButton: true,
         confirmButtonText: 'Confirmar Reserva',
         cancelButtonText: 'Cancelar',
-        // Validación antes de cerrar el modal
+        // Validación antes de pechar o modal
         preConfirm: () => {
             const dateInput = document.getElementById('swal-date') as HTMLInputElement;
             const hourSelect = document.getElementById('swal-hour') as HTMLSelectElement;
@@ -126,7 +124,7 @@ export class ReservasComponent implements OnInit {
                 data_reserva: result.value.data_reserva
             });
         } catch (error) {
-            // El error es propagado por el servicio
+            // O erro é propagado polo servicio
         }
     }
   }

@@ -5,7 +5,7 @@
         <!-- Filtro de Texto (Usuario) -->
         <input type="text" [ngModel]="filtroUsuario()" (ngModelChange)="filtroUsuario.set($event)" placeholder="Filtrar por usuario (Nome/Correo)">
         
-        <!-- Filtro de Fecha -->
+        <!-- Filtro de Data -->
         <input type="date" [ngModel]="filtroData()" (ngModelChange)="filtroData.set($event)" placeholder="Filtrar por data">
         
         <button (click)="adminService.cargarReservas()">Recargar</button>
@@ -30,7 +30,7 @@
                     </td>
                 </tr>
                 
-                <!-- Estado Sin Resultados (Filtro o Vacío) -->
+                <!-- Estado sen Resultados (Filtro ou Vacío) -->
                 <tr *ngIf="!adminService.loading() && reservasFiltradas().length === 0">
                     <td colspan="5" style="text-align: center; padding: 30px; font-style: italic; color: #888;">
                         Non se atoparon reservas.
@@ -75,7 +75,7 @@
         </table>
     </div>
     
-    <!-- CONTROLES DE PAGINACIÓN -->
+    <!-- CONTROLES DE PAXINACIÓN -->
     <div class="pagination-controls" *ngIf="adminService.reservas().length > pageSize()">
         <button 
             (click)="cambiarPagina(-1)" 

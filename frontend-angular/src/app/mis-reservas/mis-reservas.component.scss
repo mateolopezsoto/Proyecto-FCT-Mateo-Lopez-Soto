@@ -1,4 +1,4 @@
-/* Estilos básicos para la tabla y la página de Mis Reservas */
+/* Estilos básicos para a táboa e a páxina de Mis Reservas */
 .container-mis-reservas {
     max-width: 1200px;
     margin: 40px auto;
@@ -59,7 +59,7 @@ tbody td {
     vertical-align: middle;
 }
 
-/* Estilos para los botones */
+/* Estilos para os botóns */
 .btn-primary, .btn-cancelar {
     padding: 10px 18px;
     border: none;
@@ -123,7 +123,7 @@ tbody td {
     font-size: 1.1rem;
 }
 
-/* Responsividad */
+/* Responsividade */
 @media (max-width: 768px) {
     .container-mis-reservas {
         margin: 10px;

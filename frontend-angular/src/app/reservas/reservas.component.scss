@@ -3,7 +3,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fuente más moderna */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fonte máis moderna */
 }
 
 .container-reservas {
@@ -27,7 +27,7 @@ header {
 }
 
 header img.logo {
-    height: 50px; /* Logo un poco más grande */
+    height: 50px; /* Logo un pouco máis grande */
 }
 
 .top-buttons {
@@ -36,7 +36,7 @@ header img.logo {
 }
 
 .top-buttons button {
-    padding: 12px 24px; /* Botones más grandes */
+    padding: 12px 24px; /* Botóns máis grandes */
     background-color: #4285F4;
     color: #fff;
     border: none;
@@ -66,15 +66,15 @@ header img.logo {
 .main-container {
     display: flex;
     flex: 1;
-    padding: 40px; /* Más espacio alrededor */
-    gap: 40px;     /* Más separación entre sidebar y grid */
-    width: 100%;   /* Ocupar todo el ancho */
-    /* Eliminamos max-width para que llene pantallas grandes */
+    padding: 40px; /* Máis espazo alrededor */
+    gap: 40px;     /* Máis separación entre sidebar e grid */
+    width: 100%;   /* Ocupar todo o ancho */
+    /* Eliminamos max-width para que chee pantallas grandes */
 }
 
 /* Sidebar */
 .sidebar {
-    width: 300px; /* Sidebar un poco más ancha */
+    width: 300px; /* Sidebar un pouco máis ancha */
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
@@ -145,12 +145,12 @@ header img.logo {
     cursor: pointer;
 }
 
-/* Cards Grid - AQUI ESTÁ EL CAMBIO PRINCIPAL */
+/* Cards Grid */
 .cards-container {
     flex: 1;
     display: grid;
-    /* Aumentamos el mínimo a 350px para que sean tarjetas grandes */
-    /* auto-fill llena la fila con tantas columnas como quepan */
+    /* Aumentamos o mínimo a 350px para que sexan tarxetas grandes */
+    /* auto-fill chea a fila con tantas columnas como quepan */
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     gap: 30px;
     align-content: start;
@@ -165,7 +165,7 @@ header img.logo {
     flex-direction: column;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     border: 1px solid rgba(0,0,0,0.03);
-    min-height: 280px; /* Altura mínima para uniformidad */
+    min-height: 280px; /* Altura mínima para uniformidade */
     justify-content: space-between;
 }
 
@@ -184,7 +184,7 @@ header img.logo {
 .card h3 {
     margin: 0;
     color: #1a1a1a;
-    font-size: 1.5rem; /* Título más grande */
+    font-size: 1.5rem; /* Título máis grande */
     font-weight: 700;
     line-height: 1.2;
 }
@@ -201,19 +201,19 @@ header img.logo {
 }
 
 .card-body {
-    flex-grow: 1; /* Empuja el botón hacia abajo */
+    flex-grow: 1; /* Empuxa o botón cara abaixo */
 }
 
 .card-body p {
     margin: 12px 0;
     color: #4a4a4a;
-    font-size: 1.1rem; /* Texto más legible */
+    font-size: 1.1rem; /* Texto máis lexible */
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-/* Estilo para el estado */
+/* Estilo para o estado */
 .estado-badge {
     font-weight: 700;
     padding: 4px 0;
@@ -270,11 +270,11 @@ header img.logo {
     .sidebar {
         width: 100%;
         display: grid;
-        grid-template-columns: 1fr 1fr; /* Sidebar en 2 columnas arriba */
+        grid-template-columns: 1fr 1fr; /* Sidebar en 2 columnas enriba */
         gap: 20px;
     }
     .cards-container {
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Un poco más pequeñas en tablets */
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Un pouco máis pequeas en tablets */
     }
 }
 

@@ -45,6 +45,10 @@ export class AdminService {
 
     constructor() {}
 
+    /**
+     * Obten instalacións e tipos de instalación do backend 
+     * Usado no panel de administración
+     */
     async cargarDatos()  {
         if (this.loading()) return;
         this.loading.set(true);
@@ -54,7 +58,7 @@ export class AdminService {
                 lastValueFrom(this.http.get<InstalacionAdmin[]>(`${this.apiUrl}/admin/instalacions`)),
                 lastValueFrom(this.http.get<TipoInstalacion[]>(`${this.apiUrl}/tipos-instalacion`))
             ]);
-
+            // Actualiza signals
             this.instalacions.set(instalacionsData || []);
             this.tipos.set(tiposData || []);
         } catch (error: any) {
@@ -65,6 +69,12 @@ export class AdminService {
         }
     }
 
+    /**
+     * Solicita ao backend eliminar unha instalación
+     * @param id: É o id da instalación
+     * Amosa confirmación antes de borrar
+     * Actualiza a lista local
+     */
     async eliminarInstalacion(id: number) {
         const result = await Swal.fire({
             title: 'Estás seguro/a?',
@@ -98,6 +108,12 @@ export class AdminService {
         }
     }
 
+    /**
+     * Envía datos ao backend para crear unha nova instalación
+     * @param datos: Son os datos a enviar
+     * @returns true se se creou correctamente a instalación
+     * Recarga os datos
+     */
     async crearInstalacion(datos: any) {
         this.loading.set(true);
         try {
@@ -122,6 +138,12 @@ export class AdminService {
         }
     }
 
+    /**
+     * Crea un novo tipo de instalación
+     * @param nome: É o nome do novo tipo
+     * @returns true se conseguiu crear o novo tipo
+     * Recarga a lista
+     */
     async crearTipoInstalacion(nome: string) {
         this.loading.set(true);
         try {
@@ -146,12 +168,23 @@ export class AdminService {
         }
     }
 
+    /**
+     * Obtén unha instalación
+     * @param id: O id da instalación a obter
+     * @returns: Devolve os datos da instalación pedida
+     */
     async getInstalacion(id: number): Promise<InstalacionAdmin> {
         return lastValueFrom(
             this.http.get<InstalacionAdmin>(`${this.apiUrl}/admin/instalacions/${id}`)
         );
     }
 
+    /**
+     * Actualiza unha instalación existente
+     * @param id: O id da instalación a editar
+     * @param datos: Os novos datos da instalación
+     * @returns true se se edita correctamente
+     */
     async editarInstalacion(id: number, datos: any) {
         this.loading.set(true);
         try {
@@ -174,6 +207,10 @@ export class AdminService {
         }
     }
 
+    /**
+     * Carga todas as reservas
+     * GET /api/admin/reservas
+     */
     async cargarReservas() {
         this.loading.set(true);
         try {
@@ -188,6 +225,12 @@ export class AdminService {
         }
     }
 
+    /**
+     * Cambia o estado dunha reserva
+     * @param id: O id da reserva
+     * @param nuevoEstado: O novo estado da reserva
+     * @returns true se se actualiza o estado correctamente
+     */
     async cambiarEstadoReserva(id: number, nuevoEstado: string) {
         this.loading.set(true);
         try {
@@ -209,6 +252,9 @@ export class AdminService {
         }
     }
 
+    /**
+     * Carga estatísticas para o panel admin
+     */
     async cargarEstatisticas() {
         this.loading.set(true);
         try {
@@ -223,6 +269,9 @@ export class AdminService {
             }
      }
 
+     /**
+      * Descarga o CSV xerado polo backend
+      */
      async exportarInforme() {
         this.loading.set(true);
         try {

@@ -9,7 +9,7 @@ interface RegisterData {
   nome: string;
   apelidos: string;
   correo: string;
-  telefono?: string;     // ← opcional, como en tu base de datos
+  telefono?: string;     // ← opcional, como na base de datos
   contrasinal: string;
 }
 
@@ -43,16 +43,16 @@ export class RegistroComponent {
   async onRegister() {
     if (this.registroForm.invalid) return;
 
-    // Preparamos los datos exactamente como los espera Laravel
+    // Preparamos os datos exactamente coma os espera Laravel
     const datos: RegisterData = {
       nome: this.registroForm.get('nome')?.value?.trim() || '',
       apelidos: this.registroForm.get('apelidos')?.value?.trim() || '',
       correo: this.registroForm.get('correo')?.value?.trim() || '',
-      telefono: this.registroForm.get('telefono')?.value?.trim() || undefined, // ← opcional
+      telefono: this.registroForm.get('telefono')?.value?.trim() || undefined,
       contrasinal: this.registroForm.get('contrasinal')?.value || ''
     };
 
-    // El servicio se encarga de TODO: petición, mensajes, redirección
+    // O servizo  encárgase de TODO: petición, mensaxes, redirección
     await this.authService.register(datos);
   }
 }

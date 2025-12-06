@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http'; // Añadimos HttpErrorResponse para manejo profesional
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
 import Swal from 'sweetalert2';
@@ -18,7 +18,7 @@ interface Usuario {
   telefono?: string;
   id_rol: number; 
   rol: Rol;
-  url_foto?: string; // <--- Propiedad necesaria para la persistencia de la foto
+  url_foto?: string; // <--- Propiedade necesaria para a persistencia da foto
 }
 
 interface RegisterData {
@@ -39,9 +39,9 @@ interface LoginData {
 })
 export class AuthService {
   private apiUrl = 'http://127.0.0.1:8000/api';
-  private tokenKey = 'token'; // Usamos 'token' para coincidir con su implementación
+  private tokenKey = 'token'; // Usamos 'token' para coincidir coa súa implementación
   
-  // ESTADO GLOBAL REACTIVO (Mantenemos sus implementaciones originales)
+  // ESTADO GLOBAL REACTIVO (Mantemos as súas implementacións orixinais)
   usuario = signal<Usuario | null>(null);
   estaLogueado = signal(false);
   loading = signal(false);
@@ -51,12 +51,12 @@ export class AuthService {
   }
 
   // ===============================================
-  // LÓGICA DE CARGA Y PERSISTENCIA (CORREGIDA)
+  //        LÓXICA DE CARGA E PERSISTENCIA
   // ===============================================
 
   /**
-   * Carga el usuario autenticado desde el backend (/api/user) y actualiza señales.
-   * Este método garantiza que la 'url_foto' y el 'rol' se guarden.
+   * Carga o usuario autenticado dende o backend (/api/user) e actualiza sinais.
+   * Este método garantiza que a 'url_foto' e o 'rol' se garden.
    */
   async getAuthenticatedUser() {
     try {
@@ -65,12 +65,12 @@ export class AuthService {
       this.estaLogueado.set(true);
       return user;
     } catch (error) {
-      // Si falla, el comprobador de sesión lo manejará.
+      // Se falla, o comprobador de sesión manéxao.
       throw error;
     }
   }
 
-  // Su método original de comprobación de sesión, ahora usando el método centralizado
+  // O seu método orixinal de comprobación de sesión, agora usando o método centralizado
   async comprobarSesion() {
     const token = localStorage.getItem(this.tokenKey);
     if (!token) {
@@ -85,10 +85,10 @@ export class AuthService {
 
     this.loading.set(true);
     try {
-      // Usamos el método central para cargar el usuario (que trae la foto)
+      // Usamos o método central para cargar o usuario (que trae a foto)
       await this.getAuthenticatedUser();
     } catch (err: any) {
-      // Si falla (token expirado o inválido), lo borramos
+      // Se falla (token expirado ou inválido), borrámolo
       localStorage.removeItem(this.tokenKey);
       this.usuario.set(null);
       this.estaLogueado.set(false);
@@ -152,16 +152,16 @@ export class AuthService {
         this.http.post(`${this.apiUrl}/login`, payload)
       );
 
-      // Guardamos el token en LocalStorage
+      // Gardamos o token en LocalStorage
       localStorage.setItem(this.tokenKey, res.access_token);
 
-      // CRUCIAL: Cargamos el usuario autenticado (incluida la foto)
+      // Cargamos o usuario autenticado (incluida a foto)
       await this.getAuthenticatedUser(); 
       
       await Swal.fire({
       icon: 'success',
       title: 'Benvido!',
-      text: `Ola ${this.usuario()!.nome}!`, // Usamos la señal actualizada
+      text: `Ola ${this.usuario()!.nome}!`, // Usamos a señal actualizada
       timer: 1500,
       timerProgressBar: true,
       showConfirmButton: false,
@@ -186,7 +186,7 @@ export class AuthService {
       );
     } catch {}
     
-    // Garantizamos que el token se borra localmente
+    // Garantizamos que o token se borra localmente
     localStorage.removeItem(this.tokenKey); 
     
     this.usuario.set(null);
@@ -200,32 +200,32 @@ export class AuthService {
   //              PERFIL Y SEGURIDAD
   // ===============================================
 
-  // Actualizar datos del perfil con FOTO (FormData)
+  // Actualizar datos do perfil con FOTO (FormData)
   async updateProfile(formData: FormData) {
     
     const res: any = await lastValueFrom(
       this.http.post(`${this.apiUrl}/user/profile`, formData)
     );
     
-    // El backend devuelve el usuario actualizado (con la nueva url_foto)
+    // O backend devolve o usuario actualizado (coa nova url_foto)
     this.usuario.set(res.user); 
     return res;
   }
   
-  // Cambiar contraseña estando logueado
+  // Cambiar contrasinal estando logueado
   async updatePassword(datos: any) {
     return lastValueFrom(
       this.http.put(`${this.apiUrl}/user/password`, datos)
     );
   }
 
-  // Solicitar enlace de restablecimiento (Paso 1)
+  // Solicitar enlace de restablecemento (Paso 1)
   async solicitarRestablecemento(correo: string): Promise<void> {
     const payload = { correo: correo };
     return lastValueFrom(this.http.post<void>(`${this.apiUrl}/forgot-password`, payload));
   }
 
-  // Restablecer contraseña (Paso 2)
+  // Restablecer contrasinal (Paso 2)
   async restablecerContrasinal(datos: any): Promise<void> {
     return lastValueFrom(this.http.post<void>(`${this.apiUrl}/reset-password`, datos));
   }

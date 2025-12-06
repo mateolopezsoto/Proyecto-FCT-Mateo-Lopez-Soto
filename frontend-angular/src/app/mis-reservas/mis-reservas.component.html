@@ -1,19 +1,19 @@
 <div class="container-mis-reservas">
     <header>
         <h1>As miñas Reservas</h1>
-        <!-- Botón para volver al catálogo de reservas -->
+        <!-- Botón para volver ao catálogo de reservas -->
         <button routerLink="/reservas" class="btn-primary">← Volver ao Catálogo</button>
     </header>
 
     <!-- Indicador de carga -->
     <div *ngIf="loading()" class="loading-indicator">Cargando historial...</div>
     
-    <!-- Mensaje si no hay reservas -->
+    <!-- Mensaxe se non hay reservas -->
     <div *ngIf="!loading() && misReservas().length === 0" class="no-reservas">
         Aínda non tes ningunha reserva.
     </div>
 
-    <!-- Tabla de Reservas -->
+    <!-- Táboa de Reservas -->
     <table *ngIf="misReservas().length > 0 && !loading()">
         <thead>
             <tr>
@@ -30,8 +30,8 @@
                 <!-- Usamos o operador seguro '?' por se a relación non se cargou -->
                 <td>{{ reserva.instalacion?.nome }}</td>
                 
-                <!-- CORRECCIÓN APLICADA: Usamos la relación 'horario' para obtener la hora -->
-                <!-- Esto es más robusto que usar los campos de la reserva directamente. -->
+                <!-- Usamos a relación 'horario' para obter a hora -->
+                <!-- Esto é máis robusto que usar os campos da reserva directamente. -->
                 <td>{{ reserva.horario?.hora_inicio | slice:0:5 }} - {{ reserva.horario?.hora_fin | slice:0:5 }}</td>
                 
                 <td>
@@ -41,7 +41,7 @@
                 </td>
                 
                 <td>
-                    <!-- Botón de cancelación visible solo si el estado es 'Confirmada' -->
+                    <!-- Botón de cancelación visible só se o estado é 'Confirmada' -->
                     <button 
                         *ngIf="reserva.estado === 'Confirmada'" 
                         (click)="onCancelar(reserva.id_reserva)"

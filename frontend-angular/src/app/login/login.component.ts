@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { RouterModule, Router } from '@angular/router'; // Inyectamos Router
+import { RouterModule, Router } from '@angular/router'; // Inxectamos Router
 import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
@@ -15,7 +15,7 @@ import Swal from 'sweetalert2';
 export class LoginComponent {
   private fb = inject(FormBuilder);
   authService = inject(AuthService);
-  private router = inject(Router); // Inyectamos Router
+  private router = inject(Router); // Inxectamos Router
 
   loginForm = this.fb.group({
     correo: ['', [Validators.required, Validators.email]],
@@ -32,10 +32,8 @@ export class LoginComponent {
 
     await this.authService.login(credenciais);
   }
-
-  // Eliminamos openForgotPassword. La navegación será un routerLink en el HTML.
   
-  // Función para navegar al formulario de olvido
+  // Función para navegar ao formulario de olvido
   navigateToForgotPassword(e: Event) {
     e.preventDefault();
     this.router.navigate(['/olvido-contrasinal']);

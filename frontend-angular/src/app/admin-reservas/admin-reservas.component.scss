@@ -61,7 +61,7 @@ h1 {
     background-color: #357ae8;
 }
 
-/* Tabla de reservas */
+/* Táboa de reservas */
 .table-responsive {
     overflow-x: auto;
 }
@@ -99,15 +99,15 @@ tr:nth-child(even) {
 .user-name { font-weight: 500; }
 .user-info small { color: #777; }
 
-/* Info Instalación - CORRECCIÓN CLAVE */
+/* Info Instalación */
 .inst-info {
     display: flex;
-    flex-direction: column; /* Apilar Nombre y Tipo */
-    gap: 2px; /* Espacio vertical reducido */
+    flex-direction: column; /* Apilar Nome e Tipo */
+    gap: 2px; /* Espazo vertical reducido */
 }
 .inst-info strong {
     font-size: 1.05rem;
-    margin-bottom: 3px; /* Pequeño margen para separar del Tipo */
+    margin-bottom: 3px; /* Pequeno marxe para separar do Tipo */
 }
 .inst-info small {
     color: #555;
@@ -163,7 +163,7 @@ tr:nth-child(even) {
     cursor: pointer;
 }
 
-/* CONTROLES DE PAGINACIÓN */
+/* CONTROLES DE PAXINACIÓN */
 .pagination-controls {
     display: flex;
     justify-content: center;

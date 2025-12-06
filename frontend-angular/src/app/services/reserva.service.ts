@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import { AuthService } from './auth.service';
 import { lastValueFrom } from 'rxjs';
 
-// Interfaces reutilizadas para la estructura de datos
+// Interfaces reutilizadas para aa estrutura de datos
 export interface TipoInstalacion {
   id_tipo: number;
   nome_tipo: string;
@@ -35,7 +35,7 @@ export interface UsuarioReserva {
   
 }
 
-// Estructura de las reservas para la vista Histórico
+// Estructura das reservas para a vista Histórico
 export interface ReservaUsuario {
   id_reserva: number;
   data_reserva: string;
@@ -43,9 +43,9 @@ export interface ReservaUsuario {
   id_usuario: number;
   id_instalacion: number;
   id_horario: number;
-  hora_inicio: string; // Asumimos que se añade a la tabla Reserva
-  hora_fin: string; // Asumimos que se añade a la tabla Reserva
-  // Relaciones cargadas para la vista
+  hora_inicio: string; // Asumimos que se engade á tabla Reserva
+  hora_fin: string; // Asumimos que se engade á tabla Reserva
+  // Relacións cargadas para aa vista
   instalacion: { nome: string; tipo: TipoInstalacion };
   horario: Horario;
   usuario?: UsuarioReserva;
@@ -65,11 +65,11 @@ export class ReservaService {
   horarios = signal<Horario[]>([]);
   loading = signal(false);
 
-  // CONSTRUCTOR: La carga inicial se controla desde ngOnInit del componente
+  // CONSTRUCTOR: A carga inicial contrólase dende o ngOnInit do componente
   constructor() { 
   }
 
-  // Carga los datos del catálogo (Instalaciones, Tipos, Horarios)
+  // Carga os datos do catálogo (Instalacións, Tipos, Horarios)
   async cargarDatos() {
     if (this.loading()) return; 
     this.loading.set(true);
@@ -79,8 +79,8 @@ export class ReservaService {
       let instalacions: Instalacion[] = [];
       let horarios: Horario[] =  [];
       
-      // LLAMADAS CONCURRENTES PARA CARGAR EL CATÁLOGO
-      // Se usan try/catch individuales para no detener la carga si uno falla.
+      // CHAMADAS CONCURRINTES PARA CARGAR O CATÁLOGO
+      // Úsanse try/catch individuales para non deter a carga se un falla.
 
       try {
         tipos = await lastValueFrom(this.http.get<TipoInstalacion[]>(`${this.apiUrl}/tipos-instalacion`));
@@ -99,7 +99,7 @@ export class ReservaService {
       this.horarios.set(horarios);
 
       if (tipos.length === 0 && instalacions.length === 0 && horarios.length === 0) {
-        throw new Error('No se pudo cargar ningún recurso.');
+        throw new Error('No se puido cargar ningún recurso.');
       }
 
     } catch (err) {
@@ -109,14 +109,14 @@ export class ReservaService {
     }
   }
 
-  // Método para crear una reserva (POST /api/reservas)
+  // Método para crear unha reserva (POST /api/reservas)
   async reservar(datos: { id_instalacion: number; hora_inicio: string; data_reserva: string }) {
     this.loading.set(true);
 
     try {
       await lastValueFrom(this.http.post(`${this.apiUrl}/reservas`, datos));
       Swal.fire('Perfecto!', 'Reserva confirmada', 'success');
-      await this.cargarDatos(); // actualiza disponibilidad del catálogo
+      await this.cargarDatos(); // actualiza dispoñibilidade do catálogo
     } catch (err: any) {
       const msg = err.error?.message || 'Erro ao reservar';
       Swal.fire('Erro', msg, 'error');
@@ -127,10 +127,10 @@ export class ReservaService {
   }
   
   // ===============================================
-  // LÓGICA DE HISTÓRICO Y CANCELACIÓN
+  // LÖXICA DE HISTÓRICO E CANCELACIÓN
   // ===============================================
   
-  // Carga el historial de reservas del usuario (GET /api/mis-reservas)
+  // Carga o historial de reservas do usuario (GET /api/mis-reservas)
   async cargarHistorico(): Promise<ReservaUsuario[]> {
     this.loading.set(true);
     try {
@@ -145,11 +145,11 @@ export class ReservaService {
     }
   }
 
-  // Lógica para cancelar una reserva (POST/PUT a /api/reservas/{id}/cancelar - asumido)
+  // Lóxica para cancelar unha reserva (POST/PUT a /api/reservas/{id}/cancelar - asumido)
   async cancelarReserva(idReserva: number): Promise<void> {
     this.loading.set(true);
     try {
-      // Usaremos un método PUT para actualizar el estado a 'Cancelada' en el backend
+      // Usaremos un método PUT para actualizar o estado a 'Cancelada' no backend
       await lastValueFrom(
         this.http.put<void>(`${this.apiUrl}/reservas/${idReserva}/cancelar`, {})
       );

@@ -19,7 +19,7 @@ export class PerfilComponent implements OnInit {
   seccionActiva = signal<'datos' | 'password'>('datos');
   loading = signal(false);
   
-  // Variable para guardar el archivo seleccionado
+  // Variable para gardar o arquivo seleccionado
   selectedFile: File | null = null;
   previewUrl: string | null = null;
 
@@ -30,7 +30,7 @@ export class PerfilComponent implements OnInit {
     telefono: ['', [Validators.pattern(/^[6-9][0-9]{8}$/)]]
   });
 
-  // ... (passwordForm y ngOnInit iguales) ...
+  // ... (passwordForm e ngOnInit iguales) ...
   passwordForm = this.fb.group({
     current_password: ['', Validators.required],
     password: ['', [Validators.required, Validators.minLength(8)]],
@@ -46,7 +46,7 @@ export class PerfilComponent implements OnInit {
         correo: user.correo,
         telefono: user.telefono
       });
-      // Si ya tiene foto, la mostramos
+      // Se xa ten foto, amosámola
       if (user.url_foto) {
         this.previewUrl = user.url_foto;
       }
@@ -63,13 +63,13 @@ export class PerfilComponent implements OnInit {
     this.seccionActiva.set(seccion);
   }
 
-  // 1. DISPARAR EL INPUT OCULTO
+  // 1. DISPARAR O INPUT OCULTO
   triggerFileInput() {
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
     fileInput.click();
   }
 
-  // 2. MANEJAR LA SELECCIÓN DE ARCHIVO
+  // 2. MANEXAR A SELECCIÓN DE ARQUIVO
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
@@ -84,7 +84,7 @@ export class PerfilComponent implements OnInit {
     }
   }
 
-  // 3. GUARDAR CON FORMDATA
+  // 3. GARDAR CON FORMDATA
   async onUpdateProfile() {
     if (this.perfilForm.invalid) return;
 

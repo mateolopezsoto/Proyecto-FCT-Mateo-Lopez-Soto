@@ -1,4 +1,3 @@
-/* Reset básico */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -160,7 +159,7 @@ h1 {
     align-items: center;
     white-space: nowrap;
     
-    /* Para asegurar que se vexa por riba da barra se é moi longa */
+    /* Para asegurar que se vexa por enriba da barra se é moi longa */
     position: absolute;
     left: 5px; /* Posición por defecto */
 }
@@ -247,7 +246,7 @@ h1 {
     .values-container {
         position: relative;
         left: auto;
-        margin-left: auto; /* Aliñar á dereita do contenedor */
+        margin-left: auto; /* Aliñar á dereita do contedor */
         padding-right: 5px;
     }
 }
