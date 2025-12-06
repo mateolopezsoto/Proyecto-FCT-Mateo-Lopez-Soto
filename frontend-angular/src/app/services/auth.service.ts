@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
 import Swal from 'sweetalert2';
+import { environment } from '../../environments/environment';
 
 // Definición de interfaces
 interface Rol {
@@ -38,7 +39,7 @@ interface LoginData {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://127.0.0.1:8000/api';
+  private apiUrl = environment.apiUrl;
   private tokenKey = 'token'; // Usamos 'token' para coincidir coa súa implementación
   
   // ESTADO GLOBAL REACTIVO (Mantemos as súas implementacións orixinais)

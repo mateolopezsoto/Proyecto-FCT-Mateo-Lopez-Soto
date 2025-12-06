@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import Swal from 'sweetalert2';
 import { AuthService } from './auth.service';
 import { lastValueFrom } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 // Interfaces reutilizadas para aa estrutura de datos
 export interface TipoInstalacion {
@@ -57,8 +58,8 @@ export interface ReservaUsuario {
 })
 export class ReservaService {
   private http = inject(HttpClient);
-  private authService = inject(AuthService);
-  private apiUrl = 'http://127.0.0.1:8000/api'; 
+  private authService = inject(AuthService); 
+  private apiUrl = environment.apiUrl;
 
   tipos = signal<TipoInstalacion[]>([]);
   instalacions = signal<Instalacion[]>([]);

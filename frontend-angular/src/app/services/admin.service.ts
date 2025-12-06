@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { last, lastValueFrom } from "rxjs";
 import { ReservaUsuario } from "./reserva.service";
 import Swal from 'sweetalert2';
+import { environment } from "../../environments/environment";
 
 export interface TipoInstalacion {
     id_tipo: number;
@@ -35,7 +36,7 @@ export interface Estatisticas {
 })
 export class AdminService {
     private http = inject(HttpClient);
-    private apiUrl = 'http://127.0.0.1:8000/api';
+    private apiUrl = environment.apiUrl;
 
     instalacions = signal<InstalacionAdmin[]>([]);
     tipos = signal<TipoInstalacion[]>([]);
