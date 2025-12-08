@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\App;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,6 +26,16 @@ class AppServiceProvider extends ServiceProvider
             return 'http://localhost:4200/restablecer-contrasinal?token='.$token.'&email='.$notifiable->getEmailForPasswordReset();
         });
 
-        URL::forceScheme('https');
+        if (App::environment('production')) {
+            URL::forceScheme('https');
+        }
+
+        ResetPassword::createUrlUsing(function (object $notifiable, string $token) {
+            $frontendUrl = App::environment('production')
+                ? config('app.url')
+                : 'http://localhost:4200';
+            
+            return "{$frontendUrl}/restablecer-contrasinal?token={$token}&email={$notifiable->getEmailForPasswordReset()}";
+        });
     }
 }
